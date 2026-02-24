@@ -11,6 +11,7 @@ npm run dev
 ## TODO:
 
 - [x] Add favicon
+- [ ] Add Collections to botserver
 - [ ] Rules/ToS/EULA/Whatever
   - [ ] Show on signup
   - [ ] Link in footer
