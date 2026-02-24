@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getFigure, postFigure, putFigure } from "../../services/figure";
+import {
+  getCollection,
+  postCollection,
+  putCollection,
+} from "../../services/collection";
 import { Button, Label, Textarea, TextInput } from "flowbite-react";
 import ImageSortContainer from "../images/imageSortContainer";
 import { getManufacturersBySearch } from "../../services/manufacturer";
@@ -10,16 +14,18 @@ import S3DragAndDrop from "../images/s3DragAndDrop";
 import UserContext from "../../userContext";
 import toBool from "../../util/toBool";
 import AutoCompleteInput from "../autoCompleteInput";
+import { getFiguresBySearch } from "../../services/figure";
+import { FaTrashCan } from "react-icons/fa6";
 
-const FigureForm = ({ mode }) => {
+const CollectionForm = ({ mode }) => {
   const { user } = useContext(UserContext);
-  const [figure, setFigure] = useState({
+  const [collection, setCollection] = useState({
     name: "",
     partNumber: "",
     website: "",
     description: "",
-    artist: "",
     images: [],
+    figures: [],
   });
   const [canEdit, setCanEdit] = useState(false);
   const [manufacturerSearch, setManufacturerSearch] = useState("");
@@ -27,33 +33,39 @@ const FigureForm = ({ mode }) => {
   const [selectedManufacturer, setSelectedManufacturer] = useState();
   const [manufacturerDropdownOpen, setManufacturerDropdownOpen] =
     useState(false);
+
+  const [figureSearch, setFigureSearch] = useState("");
+  const [figureResults, setFigureResults] = useState([]);
+  const [figureDropdownOpen, setFigureDropdownOpen] = useState(false);
+
   const { id } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchFigureData = async () => {
-      const figureData = await getFigure(id);
-      setSelectedManufacturer(figureData.manufacturer);
-      setFigure({
+    const fetchCollectionData = async () => {
+      const collectionData = await getCollection(id);
+      setSelectedManufacturer(collectionData.manufacturer);
+      setCollection({
         name: "",
         partNumber: "",
         website: "",
         description: "",
-        artist: "",
         images: [],
-        ...figureData,
+        figures: [],
+        ...collectionData,
       });
     };
 
     if (mode === "edit") {
-      fetchFigureData();
+      fetchCollectionData();
     }
   }, [mode, id]);
 
   useEffect(() => {
     if (
-      (import.meta.env.VITE_EDIT_FIGURE_REQUIRES_ADMIN !== undefined &&
-        toBool(import.meta.env.VITE_EDIT_FIGURE_REQUIRES_ADMIN) === false) ||
+      (import.meta.env.VITE_EDIT_COLLECTION_REQUIRES_ADMIN !== undefined &&
+        toBool(import.meta.env.VITE_EDIT_COLLECTION_REQUIRES_ADMIN) ===
+          false) ||
       user?.roles?.includes("admin")
     ) {
       setCanEdit(true);
@@ -61,84 +73,91 @@ const FigureForm = ({ mode }) => {
   }, [user]);
 
   const handleSort = (position1, position2) => {
-    const imagesClone = [...figure.images];
+    const imagesClone = [...collection.images];
     const temp = imagesClone[position1];
     imagesClone[position1] = imagesClone[position2];
     imagesClone[position2] = temp;
-    setFigure({ ...figure, images: imagesClone });
+    setCollection({ ...collection, images: imagesClone });
   };
 
   const handleDelete = (index) => {
-    const imagesClone = figure.images;
+    const imagesClone = collection.images;
     const removedImages = imagesClone.splice(index, 1);
-    const newFigureObject = { ...figure, images: imagesClone };
-    if (removedImages[0]?._id === figure.thumbnail._id) {
-      newFigureObject.thumbnail = imagesClone[0];
+    const newCollectionObject = { ...collection, images: imagesClone };
+    if (removedImages[0]?._id === collection.thumbnail._id) {
+      newCollectionObject.thumbnail = imagesClone[0];
     }
-    setFigure(newFigureObject);
+    setCollection(newCollectionObject);
   };
 
   const handleSetThumbnail = (id) => {
-    setFigure((prevFigure) => ({ ...prevFigure, thumbnail: id }));
+    setCollection((prevCollection) => ({ ...prevCollection, thumbnail: id }));
   };
 
   const handleSubmit = async (e) => {
-    let figureData;
+    let collectionData;
     e.preventDefault();
     if (mode === "edit") {
-      figureData = await putFigure(figure._id, {
-        ...figure,
+      collectionData = await putCollection(collection._id, {
+        ...collection,
         manufacturer: selectedManufacturer,
       });
     } else if (mode === "new") {
-      figureData = await postFigure({
-        ...figure,
+      collectionData = await postCollection({
+        ...collection,
         manufacturer: selectedManufacturer,
       });
     }
-    if (figureData) {
+    if (collectionData) {
       toast(SaveToast, {
         data: {
-          message: `${figure.name} Saved.`,
+          message: `${collection.name} Saved.`,
         },
       });
-      navigate(`/figures/${id || figureData._id || ""}`);
+      navigate(`/collections/${id || collectionData._id || ""}`);
     }
   };
 
   const addImages = async (newImages) => {
-    let images = figure.images;
+    let images = collection.images;
     images = [...newImages, ...images];
-    setFigure((prevFigure) => ({
-      ...prevFigure,
+    setCollection((prevCollection) => ({
+      ...prevCollection,
       images,
-      thumbnail: prevFigure.thumbnail || images[0],
+      thumbnail: prevCollection.thumbnail || images[0],
     }));
   };
 
   const handleNameChange = (e) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, name: e.target.value }));
+    setCollection((prevCollection) => ({
+      ...prevCollection,
+      name: e.target.value,
+    }));
   };
 
   const handleDescriptionChange = (e) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, description: e.target.value }));
+    setCollection((prevCollection) => ({
+      ...prevCollection,
+      description: e.target.value,
+    }));
   };
 
   const handleWebsiteChange = (e) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, website: e.target.value }));
+    setCollection((prevCollection) => ({
+      ...prevCollection,
+      website: e.target.value,
+    }));
   };
 
   const handlePartNumberChange = (e) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, partNumber: e.target.value }));
-  };
-
-  const handleArtistChange = (e) => {
-    e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, artist: e.target.value }));
+    setCollection((prevCollection) => ({
+      ...prevCollection,
+      partNumber: e.target.value,
+    }));
   };
 
   const chooseManufacturer = (manufacturer) => {
@@ -164,9 +183,44 @@ const FigureForm = ({ mode }) => {
     }
   };
 
+  const chooseFigure = (figure) => {
+    const figures = collection.figures || [];
+    figures.push(figure);
+    setCollection({ ...collection, figures });
+    setFigureDropdownOpen(false);
+  };
+
+  const handleFigureSearchChange = async (e) => {
+    e.preventDefault();
+    setFigureSearch(e.target.value);
+    const options = {
+      limit: 20,
+      offset: 0,
+    };
+    if (selectedManufacturer) {
+      options.manufacturer = selectedManufacturer._id;
+    }
+    const results = await getFiguresBySearch(e.target.value, options);
+    const figures = results.docs;
+    setFigureDropdownOpen(true);
+    setFigureResults(figures);
+  };
+
+  const handleFigureSearchBlur = (e) => {
+    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+      setFigureDropdownOpen(false);
+    }
+  };
+
+  const handleFigureDelete = (index) => {
+    const figures = collection.figures || [];
+    figures.splice(index, 1);
+    setCollection({ ...collection, figures });
+  };
+
   return (
     <>
-      {figure && canEdit && (
+      {collection && canEdit && (
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">
@@ -174,7 +228,7 @@ const FigureForm = ({ mode }) => {
               <TextInput
                 id="name1"
                 type="text"
-                value={figure.name}
+                value={collection.name}
                 onChange={handleNameChange}
                 required={true}
               />
@@ -185,7 +239,7 @@ const FigureForm = ({ mode }) => {
               <TextInput
                 id="partNumber1"
                 type="text"
-                value={figure.partNumber}
+                value={collection.partNumber}
                 onChange={handlePartNumberChange}
               />
             </div>
@@ -195,7 +249,7 @@ const FigureForm = ({ mode }) => {
               <TextInput
                 id="website1"
                 type="text"
-                value={figure.website}
+                value={collection.website}
                 onChange={handleWebsiteChange}
               />
             </div>
@@ -206,17 +260,7 @@ const FigureForm = ({ mode }) => {
                 id="description1"
                 rows={4}
                 onChange={handleDescriptionChange}
-                value={figure.description}
-              />
-            </div>
-
-            <div className="max-w-lg block">
-              <Label htmlFor="artist1">Artist</Label>
-              <TextInput
-                id="artist1"
-                type="text"
-                value={figure.artist}
-                onChange={handleArtistChange}
+                value={collection.description}
               />
             </div>
 
@@ -244,6 +288,38 @@ const FigureForm = ({ mode }) => {
               />
             </div>
 
+            <div className="max-w-lg">
+              <Label htmlFor="figure1">Figures</Label>
+              {collection.figures.map((figure, index) => (
+                <div
+                  className="p-2 dark:text-white dark:bg-gray-700 bg-gray-200 mb-2 ml-4 rounded-md"
+                  key={figure._id}
+                >
+                  {figure.name}{" "}
+                  <span className="text-gray-700 dark:text-gray-500">
+                    {figure.partNumber}
+                  </span>{" "}
+                  <span
+                    onClick={() => handleFigureDelete(index)}
+                    className="inline-block cursor-pointer text-gray-500 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    <FaTrashCan />
+                  </span>
+                </div>
+              ))}
+
+              <AutoCompleteInput
+                chooseItem={chooseFigure}
+                dropdownOpen={figureDropdownOpen}
+                setDropdownOpen={setFigureDropdownOpen}
+                onChange={handleFigureSearchChange}
+                onFocus={handleFigureSearchChange}
+                value={figureSearch}
+                items={figureResults}
+                onBlur={handleFigureSearchBlur}
+              />
+            </div>
+
             <div className="block">
               <div className="max-w-lg">
                 <Label htmlFor="images1">Images</Label>
@@ -253,8 +329,8 @@ const FigureForm = ({ mode }) => {
                 <ImageSortContainer
                   onSort={handleSort}
                   onDelete={handleDelete}
-                  images={figure.images}
-                  thumbnail={figure.thumbnail}
+                  images={collection.images}
+                  thumbnail={collection.thumbnail}
                   onSetThumbnail={handleSetThumbnail}
                 />
               </div>
@@ -269,4 +345,4 @@ const FigureForm = ({ mode }) => {
   );
 };
 
-export default FigureForm;
+export default CollectionForm;

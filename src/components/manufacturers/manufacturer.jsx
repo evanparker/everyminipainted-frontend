@@ -26,7 +26,7 @@ const Manufacturer = () => {
   const [manufacturer, setManufacturer] = useState();
   const [figures, setFigures] = useState();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
@@ -35,8 +35,12 @@ const Manufacturer = () => {
   const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
-    if (user?.roles?.includes("admin")) {
-      setIsAdmin(true);
+    if (
+      user?.roles?.includes("admin") ||
+      (import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN !== undefined &&
+        toBool(import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN) === false)
+    ) {
+      setCanEdit(true);
     }
   }, [user]);
 
@@ -57,7 +61,6 @@ const Manufacturer = () => {
       });
       setTotalPages(results.totalPages);
       setFigures(results.docs);
-      console.log(results);
     };
 
     fetchManufacturerFiguresData();
@@ -91,7 +94,7 @@ const Manufacturer = () => {
         onConfirm={handleDeleteManufacturer}
       />
       {manufacturer && <DisplayManufacturer manufacturer={manufacturer} />}
-      {isAdmin && (
+      {canEdit && (
         <div className="flex gap-5">
           <Button
             className="max-w-36 mt-5"

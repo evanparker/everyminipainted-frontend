@@ -23,7 +23,7 @@ const ManufacturerForm = ({ mode }) => {
     images: [],
     socials: [],
   });
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
   const [socials, setSocials] = useState([]);
   const { id } = useParams();
   const navigate = useNavigate();
@@ -47,8 +47,12 @@ const ManufacturerForm = ({ mode }) => {
   }, [mode, id]);
 
   useEffect(() => {
-    if (user?.roles?.includes("admin")) {
-      setIsAdmin(true);
+    if (
+      user?.roles?.includes("admin") ||
+      (import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN !== undefined &&
+        toBool(import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN) === false)
+    ) {
+      setCanEdit(true);
     }
   }, [user]);
 
@@ -132,18 +136,9 @@ const ManufacturerForm = ({ mode }) => {
     }));
   };
 
-  const canEditManufacturer = () => {
-    return (
-      (import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN !== undefined &&
-        toBool(import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN) ===
-          false) ||
-      isAdmin
-    );
-  };
-
   return (
     <>
-      {manufacturer && canEditManufacturer && (
+      {manufacturer && canEdit && (
         <div>
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="block max-w-lg">

@@ -15,24 +15,34 @@ import DeleteModal from "../deleteModal";
 import DisplayMinis from "../minis/displayMinis";
 import DeleteToast from "../toasts/deleteToast";
 import DisplayFigure from "./displayFigure";
+import DisplayCollections from "../collections/displayCollections";
+import { getCollectionsByFigure } from "../../services/collection";
+import toBool from "../../util/toBool";
 
 const Figure = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
   const [figure, setFigure] = useState();
   const [minis, setMinis] = useState();
+  const [collections, setCollections] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") || 1)
   );
   const [totalPages, setTotalPages] = useState(0);
+  const [currentCollectionsPage, setCurrentCollectionsPages] = useState(1);
+  const [totalCollectionsPages, setTotalCollectionsPages] = useState(1);
 
   useEffect(() => {
-    if (user?.roles?.includes("admin")) {
-      setIsAdmin(true);
+    if (
+      (import.meta.env.VITE_EDIT_FIGURE_REQUIRES_ADMIN !== undefined &&
+        toBool(import.meta.env.VITE_EDIT_FIGURE_REQUIRES_ADMIN) === false) ||
+      user?.roles?.includes("admin")
+    ) {
+      setCanEdit(true);
     }
   }, [user]);
 
@@ -44,6 +54,19 @@ const Figure = () => {
 
     fetchFigureData();
   }, [id]);
+
+  useEffect(() => {
+    const fetchFigureCollectionsData = async () => {
+      const results = await getCollectionsByFigure({
+        figureId: id,
+        limit: itemsPerPage,
+        offset: currentCollectionsPage * itemsPerPage,
+      });
+      setCollections(results.docs);
+      setTotalCollectionsPages(results.totalPages);
+    };
+    fetchFigureCollectionsData();
+  }, [currentCollectionsPage, id]);
 
   useEffect(() => {
     const fetchFigureMinisData = async () => {
@@ -77,6 +100,9 @@ const Figure = () => {
     setCurrentPage(page);
     setSearchParams({ page }, { replace: false });
   };
+  const onCollectionsPageChange = (page) => {
+    setCurrentCollectionsPages(page);
+  };
 
   return (
     <div>
@@ -86,7 +112,7 @@ const Figure = () => {
         onConfirm={handleDeleteFigure}
       />
       {figure && <DisplayFigure figure={figure} />}
-      {isAdmin && (
+      {canEdit && (
         <div className="flex gap-5">
           <Button
             className="max-w-36 mt-5"
@@ -104,6 +130,23 @@ const Figure = () => {
             <FaTrashCan className="mr-2 h-5 w-5" /> Delete
           </Button>
         </div>
+      )}
+      {collections?.length > 0 && (
+        <>
+          <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">
+            Part of These Collections
+          </h3>
+          <div className="mt-5">
+            <DisplayCollections collections={collections} />
+          </div>
+          <div>
+            <Pagination
+              currentPage={currentCollectionsPage}
+              totalPages={totalCollectionsPages}
+              onPageChange={onCollectionsPageChange}
+            />
+          </div>
+        </>
       )}
       {minis?.length > 0 && (
         <>

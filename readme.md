@@ -11,13 +11,9 @@ npm run dev
 ## TODO:
 
 - [x] Add favicon
-- [ ] Improve bot server
-  - [x] Fix link thumbnails
-  - [x] Serve multiple images in previews
-  - [ ] Better user pages (serve description, user avatar)
-  - [ ] Better index pages
-- [x] Click to zoom in on open images
-- [x] Links to admin pages (if admin)
+- [ ] Rules/ToS/EULA/Whatever
+  - [ ] Show on signup
+  - [ ] Link in footer
 - [ ] Improve Search/Advanced Search
   - [x] Allow figure search to specify manufacturer
   - [ ] Allow mini to search by figure
@@ -56,6 +52,12 @@ npm run dev
 - [ ] Request a figure
 - [ ] Style and write email templates
 - [ ] Comments on entities (minis etc)
+- [ ] Improve bot server
+  - [x] Fix link thumbnails
+  - [x] Serve multiple images in previews
+  - [ ] Better user pages (serve description, user avatar)
+  - [ ] Better index pages
+  - [ ] Fix 404's crashing
 - [x] Keyboard support
   - [x] Arrow key to change images being viewed
 - [ ] Search within other entities (search on a user page for example)
@@ -187,6 +189,8 @@ npm run dev
     - [x] maybe have a min length of 3?
     - [x] force lowercase
     - [x] attatch to validation?
+- [x] Click to zoom in on open images
+- [x] Links to admin pages (if admin)
 
 # Vite + React + Caddy
 

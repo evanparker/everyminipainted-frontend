@@ -3,15 +3,18 @@ import { useContext, useEffect, useState } from "react";
 import { FaPlus } from "react-icons/fa6";
 import { Link, useSearchParams } from "react-router-dom";
 import { itemsPerPage } from "../../constants/requestDefaults";
-import { getFigures, getFiguresBySearch } from "../../services/figure";
+import {
+  getCollections,
+  getCollectionsBySearch,
+} from "../../services/collection";
 import UserContext from "../../userContext";
-import DisplayFigures from "./displayFigures";
+import DisplayCollections from "./displayCollections";
 import toBool from "../../util/toBool";
-import FigureSearchForm from "./figureSearchForm";
+// import CollectionSearchForm from "./collectionSearchForm";
 
-const Figures = () => {
+const Collections = () => {
   const { user } = useContext(UserContext);
-  const [figures, setFigures] = useState([]);
+  const [collections, setCollections] = useState([]);
   const [canEdit, setCanEdit] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
@@ -25,20 +28,20 @@ const Figures = () => {
     const fetchData = async () => {
       let results;
       if (searchString || manufacturer) {
-        results = await getFiguresBySearch(searchString, {
+        results = await getCollectionsBySearch(searchString, {
           limit: itemsPerPage,
           offset: (currentPage - 1) * itemsPerPage,
           manufacturer,
         });
         setTotalPages(results.totalPages);
-        setFigures(results.docs);
+        setCollections(results.docs);
       } else {
-        results = await getFigures({
+        results = await getCollections({
           limit: itemsPerPage,
           offset: (currentPage - 1) * itemsPerPage,
         });
         setTotalPages(results.totalPages);
-        setFigures(results.docs);
+        setCollections(results.docs);
       }
     };
 
@@ -51,8 +54,9 @@ const Figures = () => {
 
   useEffect(() => {
     if (
-      (import.meta.env.VITE_EDIT_FIGURE_REQUIRES_ADMIN !== undefined &&
-        toBool(import.meta.env.VITE_EDIT_FIGURE_REQUIRES_ADMIN) === false) ||
+      (import.meta.env.VITE_EDIT_COLLECTION_REQUIRES_ADMIN !== undefined &&
+        toBool(import.meta.env.VITE_EDIT_COLLECTION_REQUIRES_ADMIN) ===
+          false) ||
       user?.roles?.includes("admin")
     ) {
       setCanEdit(true);
@@ -73,15 +77,15 @@ const Figures = () => {
 
   return (
     <>
-      <FigureSearchForm className="mb-5" />
+      {/* <CollectionSearchForm className="mb-5" /> */}
       {canEdit && (
         <div className="mb-5 flex gap-5">
-          <Button as={Link} to={`/figures/new`}>
-            <FaPlus className="inline" /> New Figure
+          <Button as={Link} to={`/collections/new`}>
+            <FaPlus className="inline" /> New Collection
           </Button>
         </div>
       )}
-      <DisplayFigures figures={figures} />
+      <DisplayCollections collections={collections} />
 
       <div>
         {totalPages > 1 && (
@@ -96,4 +100,4 @@ const Figures = () => {
   );
 };
 
-export default Figures;
+export default Collections;
