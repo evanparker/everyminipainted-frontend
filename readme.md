@@ -40,8 +40,8 @@ npm run dev
   - mongoose schema:
     - `timestamps: true`
     - [x] immutable? (on things like username)
-    - ~~use joi?~~ (nah.)
 - [ ] Accessibility (a11y)
+  - WCAG and inclusive design standards
 - [x] Remove cloudinary support
 - [ ] Design homepage
 - [ ] Add blog/articles
@@ -80,6 +80,7 @@ npm run dev
     - [ ] Archon Studios
     - [ ] Steamforged
     - [ ] ... GW?
+      - https://wh40k.lexicanum.com/wiki/Portal:Miniatures
   - [x] Reaper APIs: https://www.reapermini.com/retailsupport/resources
   - [x] Wizkids unpainted essentials page: https://wizkids.com/upmessentials/
 - [x] Consolodate search pickers (figure, manufacturer)
