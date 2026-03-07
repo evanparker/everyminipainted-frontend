@@ -151,6 +151,15 @@ function Navigation() {
           </NavLink>
         </div>
         <div className="md:self-center">
+          <NavLink to={"/collections"}>
+            {({ isActive }) => (
+              <NavbarLink as="div" active={isActive}>
+                Collections
+              </NavbarLink>
+            )}
+          </NavLink>
+        </div>
+        <div className="md:self-center">
           <NavLink to={"/manufacturers"}>
             {({ isActive }) => (
               <NavbarLink as="div" active={isActive}>

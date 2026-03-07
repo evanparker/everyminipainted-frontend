@@ -11,13 +11,10 @@ npm run dev
 ## TODO:
 
 - [x] Add favicon
-- [ ] Improve bot server
-  - [x] Fix link thumbnails
-  - [x] Serve multiple images in previews
-  - [ ] Better user pages (serve description, user avatar)
-  - [ ] Better index pages
-- [x] Click to zoom in on open images
-- [x] Links to admin pages (if admin)
+- [ ] Add Collections to botserver
+- [ ] Rules/ToS/EULA/Whatever
+  - [ ] Show on signup
+  - [ ] Link in footer
 - [ ] Improve Search/Advanced Search
   - [x] Allow figure search to specify manufacturer
   - [ ] Allow mini to search by figure
@@ -43,8 +40,8 @@ npm run dev
   - mongoose schema:
     - `timestamps: true`
     - [x] immutable? (on things like username)
-    - ~~use joi?~~ (nah.)
 - [ ] Accessibility (a11y)
+  - WCAG and inclusive design standards
 - [x] Remove cloudinary support
 - [ ] Design homepage
 - [ ] Add blog/articles
@@ -56,6 +53,12 @@ npm run dev
 - [ ] Request a figure
 - [ ] Style and write email templates
 - [ ] Comments on entities (minis etc)
+- [ ] Improve bot server
+  - [x] Fix link thumbnails
+  - [x] Serve multiple images in previews
+  - [ ] Better user pages (serve description, user avatar)
+  - [ ] Better index pages
+  - [ ] Fix 404's crashing
 - [x] Keyboard support
   - [x] Arrow key to change images being viewed
 - [ ] Search within other entities (search on a user page for example)
@@ -77,6 +80,7 @@ npm run dev
     - [ ] Archon Studios
     - [ ] Steamforged
     - [ ] ... GW?
+      - https://wh40k.lexicanum.com/wiki/Portal:Miniatures
   - [x] Reaper APIs: https://www.reapermini.com/retailsupport/resources
   - [x] Wizkids unpainted essentials page: https://wizkids.com/upmessentials/
 - [x] Consolodate search pickers (figure, manufacturer)
@@ -187,6 +191,8 @@ npm run dev
     - [x] maybe have a min length of 3?
     - [x] force lowercase
     - [x] attatch to validation?
+- [x] Click to zoom in on open images
+- [x] Links to admin pages (if admin)
 
 # Vite + React + Caddy
 

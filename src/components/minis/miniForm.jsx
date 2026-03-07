@@ -205,9 +205,6 @@ const MiniForm = ({ mode }) => {
           </form>
         </div>
       )}
-      {mini && userId !== mini?.userId && (
-        <Link to={`/minis/${id}`}>Back to mini</Link>
-      )}
       {!token && (
         <Button as={Link} to={`/login`}>
           Login?

@@ -18,6 +18,10 @@ import Figure from "./components/figures/figure";
 import FigureEdit from "./components/figures/figureEdit";
 import FigureNew from "./components/figures/figureNew";
 import Figures from "./components/figures/figures";
+import Collection from "./components/collections/collection";
+import CollectionEdit from "./components/collections/collectionEdit";
+import CollectionNew from "./components/collections/collectionNew";
+import Collections from "./components/collections/collections";
 import Manufacturer from "./components/manufacturers/manufacturer";
 import ManufacturerEdit from "./components/manufacturers/manufacturerEdit";
 import ManufacturerNew from "./components/manufacturers/manufacturerNew";
@@ -111,6 +115,11 @@ function App() {
           <Route path="/figures/:id" element={<Figure />} />
           <Route path="/figures/:id/edit" element={<FigureEdit />} />
           <Route path="/figures/new" element={<FigureNew />} />
+
+          <Route path="/collections" element={<Collections />} />
+          <Route path="/collections/:id" element={<Collection />} />
+          <Route path="/collections/:id/edit" element={<CollectionEdit />} />
+          <Route path="/collections/new" element={<CollectionNew />} />
 
           <Route path="/manufacturers" element={<Manufacturers />} />
           <Route path="/manufacturers/:id" element={<Manufacturer />} />

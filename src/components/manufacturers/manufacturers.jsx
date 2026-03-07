@@ -14,7 +14,7 @@ import toBool from "../../util/toBool";
 const Manufacturers = () => {
   const { user } = useContext(UserContext);
   const [manufacturers, setManufacturers] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [canEdit, setCanEdit] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
     parseInt(searchParams.get("page") || 1)
@@ -48,8 +48,12 @@ const Manufacturers = () => {
   }, [searchParams]);
 
   useEffect(() => {
-    if (user?.roles?.includes("admin")) {
-      setIsAdmin(true);
+    if (
+      user?.roles?.includes("admin") ||
+      (import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN !== undefined &&
+        toBool(import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN) === false)
+    ) {
+      setCanEdit(true);
     }
   }, [user]);
 
@@ -62,18 +66,9 @@ const Manufacturers = () => {
     setSearchParams(searchParams, { replace: false });
   };
 
-  const canEditManufacturer = () => {
-    return (
-      (import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN !== undefined &&
-        toBool(import.meta.env.VITE_EDIT_MANUFACTURER_REQUIRES_ADMIN) ===
-          false) ||
-      isAdmin
-    );
-  };
-
   return (
     <>
-      {canEditManufacturer() && (
+      {canEdit && (
         <div className="mb-5 flex gap-5">
           <Button as={Link} to={`/manufacturers/new`}>
             <FaPlus className="inline" /> New Manufacturer

@@ -87,7 +87,7 @@ function AutoCompleteInput({
         <div className="relative">
           <ul
             ref={dropdownContainerRef}
-            className="absolute w-lg shadow-md h-48 pb-3 overflow-y-auto text-sm bg-gray-300 dark:bg-gray-800 text-gray-700 dark:text-gray-200"
+            className="absolute z-10 w-lg shadow-md h-48 pb-3 overflow-y-auto text-sm bg-gray-300 dark:bg-gray-800 text-gray-700 dark:text-gray-200"
           >
             <li
               id={`dropdownOption${0}`}
