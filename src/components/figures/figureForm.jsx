@@ -114,7 +114,7 @@ const FigureForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = figure.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setFigure((prevFigure) => ({
       ...prevFigure,
       images,

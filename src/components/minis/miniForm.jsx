@@ -86,7 +86,7 @@ const MiniForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = mini.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setMini((prevMini) => ({
       ...prevMini,
       images,

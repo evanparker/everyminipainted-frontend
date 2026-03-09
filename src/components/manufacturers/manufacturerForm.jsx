@@ -109,7 +109,7 @@ const ManufacturerForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = manufacturer.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setManufacturer((prevManufacturer) => ({
       ...prevManufacturer,
       images,

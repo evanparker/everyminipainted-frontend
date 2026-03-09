@@ -126,7 +126,7 @@ const CollectionForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = collection.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setCollection((prevCollection) => ({
       ...prevCollection,
       images,
