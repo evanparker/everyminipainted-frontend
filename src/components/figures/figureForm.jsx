@@ -1,15 +1,17 @@
+import { Button, Label, Textarea, TextInput } from "flowbite-react";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getFigure, postFigure, putFigure } from "../../services/figure";
-import { Button, Label, Textarea, TextInput } from "flowbite-react";
-import ImageSortContainer from "../images/imageSortContainer";
-import { getManufacturersBySearch } from "../../services/manufacturer";
 import { toast } from "react-toastify/unstyled";
-import SaveToast from "../toasts/saveToast";
-import S3DragAndDrop from "../images/s3DragAndDrop";
+import { getFigure, postFigure, putFigure } from "../../services/figure";
+import { putImage } from "../../services/image";
+import { getManufacturersBySearch } from "../../services/manufacturer";
 import UserContext from "../../userContext";
 import toBool from "../../util/toBool";
 import AutoCompleteInput from "../autoCompleteInput";
+import ImageSortContainer from "../images/imageSortContainer";
+import S3DragAndDrop from "../images/s3DragAndDrop";
+import ImageTextFieldModal from "../images/ImageTextFieldModal";
+import SaveToast from "../toasts/saveToast";
 
 const FigureForm = ({ mode }) => {
   const { user } = useContext(UserContext);
@@ -27,6 +29,10 @@ const FigureForm = ({ mode }) => {
   const [selectedManufacturer, setSelectedManufacturer] = useState();
   const [manufacturerDropdownOpen, setManufacturerDropdownOpen] =
     useState(false);
+  const [showTextFieldModal, setShowTextFieldModal] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [imageObj, setImageObj] = useState({});
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -164,10 +170,40 @@ const FigureForm = ({ mode }) => {
     }
   };
 
+  const handleImageSave = async () => {
+    const imagesClone = [...figure.images];
+    imagesClone[selectedImageIndex] = imageObj;
+    setFigure({ ...figure, images: imagesClone });
+    const imageResponse = await putImage(imageObj._id, imageObj);
+    if (imageResponse) {
+      toast(SaveToast, {
+        data: {
+          message: `Image Data Saved.`,
+        },
+      });
+    }
+
+    setShowTextFieldModal(false);
+  };
+
+  const handleImageEdit = (index) => {
+    setSelectedImageIndex(index);
+    setImageObj(figure?.images[index]);
+
+    setShowTextFieldModal(true);
+  };
+
   return (
     <>
       {figure && canEdit && (
         <div>
+          <ImageTextFieldModal
+            imageObj={imageObj}
+            show={showTextFieldModal}
+            onClose={() => setShowTextFieldModal(false)}
+            onConfirm={handleImageSave}
+            setImageObj={setImageObj}
+          />
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">
               <Label htmlFor="name1">Name</Label>
@@ -254,6 +290,7 @@ const FigureForm = ({ mode }) => {
                   onSort={handleSort}
                   onDelete={handleDelete}
                   images={figure.images}
+                  onEdit={handleImageEdit}
                   thumbnail={figure.thumbnail}
                   onSetThumbnail={handleSetThumbnail}
                 />

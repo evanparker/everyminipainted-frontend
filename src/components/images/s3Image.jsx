@@ -20,7 +20,7 @@ const S3Image = ({ image, width, height, blur, className = "" }) => {
     extension: "png",
   });
 
-  return <img className={className} src={url} />;
+  return <img className={className} src={url} alt={image.altText || ""} />;
 };
 
 export default S3Image;

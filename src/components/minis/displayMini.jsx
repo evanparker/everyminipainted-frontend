@@ -52,7 +52,7 @@ const DisplayMini = ({ mini }) => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {mini?.images?.map((img) => (
-            <div
+            <figure
               key={img._id}
               onClick={() => setSelectedImage(img)}
               className="cursor-pointer max-w-md flex flex-col rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800"
@@ -62,7 +62,12 @@ const DisplayMini = ({ mini }) => {
               ) : (
                 <div></div>
               )}
-            </div>
+              {img?.caption && (
+                <figcaption className="text-sm text-gray-900 dark:text-gray-200 m-2">
+                  {img.caption}
+                </figcaption>
+              )}
+            </figure>
           ))}
         </div>
         {mini.figure && (

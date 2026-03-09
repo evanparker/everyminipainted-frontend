@@ -1,4 +1,4 @@
-# everymini-frontend
+# everyminipainted-frontend
 
 A miniatures portfolio website
 
@@ -42,6 +42,7 @@ npm run dev
     - [x] immutable? (on things like username)
 - [ ] Accessibility (a11y)
   - WCAG and inclusive design standards
+  - [ ] Add Captions and AltText to images
 - [x] Remove cloudinary support
 - [ ] Design homepage
 - [ ] Add blog/articles

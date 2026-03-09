@@ -1,10 +1,11 @@
 import { useRef } from "react";
-import { FaRegStar, FaStar, FaTrashCan } from "react-icons/fa6";
+import { FaPen, FaRegStar, FaStar, FaTrashCan } from "react-icons/fa6";
 import S3Image from "./s3Image";
 
 const ImageSortContainer = ({
   onSort,
   onDelete,
+  onEdit,
   onSetThumbnail,
   images,
   thumbnail,
@@ -31,6 +32,14 @@ const ImageSortContainer = ({
           >
             <FaTrashCan />
           </div>
+          {onEdit && (
+            <div
+              onClick={() => onEdit(index)}
+              className="absolute right-12 top-2 p-2 cursor-pointer text-gray-500 hover:text-gray-800 bg-gray-100 dark:text-gray-400 dark:bg-gray-700 dark:hover:text-gray-200"
+            >
+              <FaPen />
+            </div>
+          )}
           {onSetThumbnail && (
             <div
               onClick={() => onSetThumbnail(img)}
