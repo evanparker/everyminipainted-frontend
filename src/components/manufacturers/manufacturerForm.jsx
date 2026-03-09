@@ -14,7 +14,7 @@ import SocialsForm from "../socialsForm";
 import SaveToast from "../toasts/saveToast";
 import toBool from "../../util/toBool";
 import { putImage } from "../../services/image";
-import ImageTextFieldModal from "../images/ImageTextFieldModal";
+import ImageTextFieldModal from "../images/imageTextFieldModal";
 
 const ManufacturerForm = ({ mode }) => {
   const { user } = useContext(UserContext);

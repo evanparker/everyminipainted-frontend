@@ -10,7 +10,7 @@ import toBool from "../../util/toBool";
 import AutoCompleteInput from "../autoCompleteInput";
 import ImageSortContainer from "../images/imageSortContainer";
 import S3DragAndDrop from "../images/s3DragAndDrop";
-import ImageTextFieldModal from "../images/ImageTextFieldModal";
+import ImageTextFieldModal from "../images/imageTextFieldModal";
 import SaveToast from "../toasts/saveToast";
 
 const FigureForm = ({ mode }) => {

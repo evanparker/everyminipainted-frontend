@@ -16,7 +16,7 @@ import toBool from "../../util/toBool";
 import AutoCompleteInput from "../autoCompleteInput";
 import { getFiguresBySearch } from "../../services/figure";
 import { FaTrashCan } from "react-icons/fa6";
-import ImageTextFieldModal from "../images/ImageTextFieldModal";
+import ImageTextFieldModal from "../images/imageTextFieldModal";
 import { putImage } from "../../services/image";
 
 const CollectionForm = ({ mode }) => {
