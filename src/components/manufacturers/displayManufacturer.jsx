@@ -26,6 +26,8 @@ const DisplayManufacturer = ({ manufacturer }) => {
               Math.min(manufacturer.images.length - 1, index + 1)
             ]
           );
+        } else if (e.key === " " || e.key === "Escape") {
+          onClose();
         }
       }
     },

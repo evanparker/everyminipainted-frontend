@@ -23,6 +23,8 @@ const DisplayCollection = ({ collection }) => {
           setSelectedImage(
             collection.images[Math.min(collection.images.length - 1, index + 1)]
           );
+        } else if (e.key === " " || e.key === "Escape") {
+          onClose();
         }
       }
     },

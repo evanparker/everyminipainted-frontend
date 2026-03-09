@@ -23,6 +23,8 @@ const DisplayFigure = ({ figure }) => {
           setSelectedImage(
             figure.images[Math.min(figure.images.length - 1, index + 1)]
           );
+        } else if (e.key === " " || e.key === "Escape") {
+          onClose();
         }
       }
     },

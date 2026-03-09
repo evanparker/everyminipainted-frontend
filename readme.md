@@ -42,7 +42,8 @@ npm run dev
     - [x] immutable? (on things like username)
 - [ ] Accessibility (a11y)
   - WCAG and inclusive design standards
-  - [ ] Add Captions and AltText to images
+  - [x] Add Captions and AltText to images
+  - [ ] Keyboard Navigation
 - [x] Remove cloudinary support
 - [ ] Design homepage
 - [ ] Add blog/articles
@@ -59,9 +60,10 @@ npm run dev
   - [x] Serve multiple images in previews
   - [ ] Better user pages (serve description, user avatar)
   - [ ] Better index pages
-  - [ ] Fix 404's crashing
+  - [x] Fix 404's crashing
 - [x] Keyboard support
   - [x] Arrow key to change images being viewed
+  - [x] Space and Escape to close
 - [ ] Search within other entities (search on a user page for example)
 - [ ] Figure out how to merge duplicate records
   - [ ] Find a way to search for likely duplicates
