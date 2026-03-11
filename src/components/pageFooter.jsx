@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 function PageFooter() {
   return (
-    <Footer container>
+    <Footer container className="bg-primary-200">
       <div className="w-full text-center">
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
           <FooterBrand

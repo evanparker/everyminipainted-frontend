@@ -21,7 +21,9 @@ import S3Image from "./images/s3Image";
 function Navigation() {
   const { user, logout } = useContext(UserContext);
   return (
-    <Navbar fluid rounded>
+    <Navbar fluid rounded className="bg-primary-200">
+      <NavbarToggle />
+
       <NavbarBrand as={Link} to={"/"}>
         <img src="/emplogo.png" className="mr-3 h-9" alt="EMP Logo" />
         <span className="hidden sm:block self-center whitespace-nowrap text-xl font-semibold dark:text-white">
@@ -31,7 +33,52 @@ function Navigation() {
           EMP
         </span>
       </NavbarBrand>
-      <div className="flex md:order-2 gap-5">
+
+      <NavbarCollapse className="order-2 md:order-1">
+        <div className="md:self-center">
+          <NavLink to={"/minis"}>
+            {({ isActive }) => (
+              <NavbarLink as="div" active={isActive}>
+                Minis
+              </NavbarLink>
+            )}
+          </NavLink>
+        </div>
+        <div className="md:self-center">
+          <NavLink to={"/figures"}>
+            {({ isActive }) => (
+              <NavbarLink as="div" active={isActive}>
+                Figures
+              </NavbarLink>
+            )}
+          </NavLink>
+        </div>
+        <div className="md:self-center">
+          <NavLink to={"/collections"}>
+            {({ isActive }) => (
+              <NavbarLink as="div" active={isActive}>
+                Collections
+              </NavbarLink>
+            )}
+          </NavLink>
+        </div>
+        <div className="md:self-center">
+          <NavLink to={"/manufacturers"}>
+            {({ isActive }) => (
+              <NavbarLink as="div" active={isActive}>
+                Manufacturers
+              </NavbarLink>
+            )}
+          </NavLink>
+        </div>
+        {user && (
+          <Button as={Link} to={`/minis/new`}>
+            <FaPlus className="inline" /> New Mini
+          </Button>
+        )}
+      </NavbarCollapse>
+
+      <div className="flex order-1 md:order-2 gap-5">
         <DarkThemeToggle />
 
         <Dropdown
@@ -128,52 +175,7 @@ function Navigation() {
             </>
           )}
         </Dropdown>
-
-        <NavbarToggle />
       </div>
-      <NavbarCollapse>
-        <div className="md:self-center">
-          <NavLink to={"/minis"}>
-            {({ isActive }) => (
-              <NavbarLink as="div" active={isActive}>
-                Minis
-              </NavbarLink>
-            )}
-          </NavLink>
-        </div>
-        <div className="md:self-center">
-          <NavLink to={"/figures"}>
-            {({ isActive }) => (
-              <NavbarLink as="div" active={isActive}>
-                Figures
-              </NavbarLink>
-            )}
-          </NavLink>
-        </div>
-        <div className="md:self-center">
-          <NavLink to={"/collections"}>
-            {({ isActive }) => (
-              <NavbarLink as="div" active={isActive}>
-                Collections
-              </NavbarLink>
-            )}
-          </NavLink>
-        </div>
-        <div className="md:self-center">
-          <NavLink to={"/manufacturers"}>
-            {({ isActive }) => (
-              <NavbarLink as="div" active={isActive}>
-                Manufacturers
-              </NavbarLink>
-            )}
-          </NavLink>
-        </div>
-        {user && (
-          <Button as={Link} to={`/minis/new`}>
-            <FaPlus className="inline" /> New Mini
-          </Button>
-        )}
-      </NavbarCollapse>
     </Navbar>
   );
 }

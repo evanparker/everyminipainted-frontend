@@ -24,6 +24,7 @@ const DisplayMini = ({ mini }) => {
             mini.images[Math.min(mini.images.length - 1, index + 1)]
           );
         } else if (e.key === " " || e.key === "Escape") {
+          e.preventDefault();
           onClose();
         }
       }
@@ -49,14 +50,20 @@ const DisplayMini = ({ mini }) => {
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           {mini?.name || "Untitled Mini"}
         </h1>
-        <div className="format dark:format-invert">
-          <Markdown>{mini?.description}</Markdown>
-        </div>
+        {mini?.description && (
+          <div className="format dark:format-invert my-5">
+            <Markdown>{mini?.description}</Markdown>
+          </div>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
           {mini?.images?.map((img) => (
             <figure
               key={img._id}
+              tabIndex={0}
               onClick={() => setSelectedImage(img)}
+              onKeyDown={(e) =>
+                e.key == "Enter" ? setSelectedImage(img) : undefined
+              }
               className="cursor-pointer max-w-md flex flex-col rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
               {img.type === "s3Image" ? (

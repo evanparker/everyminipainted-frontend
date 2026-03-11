@@ -24,6 +24,7 @@ const DisplayFigure = ({ figure }) => {
             figure.images[Math.min(figure.images.length - 1, index + 1)]
           );
         } else if (e.key === " " || e.key === "Escape") {
+          e.preventDefault();
           onClose();
         }
       }
@@ -56,7 +57,11 @@ const DisplayFigure = ({ figure }) => {
           {figure?.images?.map((img) => (
             <figure
               key={img._id}
+              tabIndex={0}
               onClick={() => setSelectedImage(img)}
+              onKeyDown={(e) =>
+                e.key == "Enter" ? setSelectedImage(img) : undefined
+              }
               className="cursor-pointer max-w-md flex flex-col rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
               {img.type === "s3Image" ? (
