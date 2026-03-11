@@ -21,7 +21,7 @@ import S3Image from "./images/s3Image";
 function Navigation() {
   const { user, logout } = useContext(UserContext);
   return (
-    <Navbar fluid rounded className="bg-primary-200">
+    <Navbar fluid rounded className="shadow bg-primary-200">
       <NavbarToggle />
 
       <NavbarBrand as={Link} to={"/"}>
