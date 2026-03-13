@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Socials from "../constants/socials";
 
-const SocialsBlock = ({socials, compact}) => {
+const SocialsBlock = ({ socials, compact }) => {
   return (
     <>
       {socials?.length > 0 && !compact && (
@@ -13,7 +13,11 @@ const SocialsBlock = ({socials, compact}) => {
             {socials.map((social, index) => {
               const Icon = Socials[social.service].icon;
               return (
-                <Link key={`social${index}`} to={social.link}>
+                <Link
+                  key={`social${index}`}
+                  to={social.link}
+                  aria-label={`Link to ${social.service}`}
+                >
                   <div className="flex items-center gap-2 mb-1 text-gray-900 dark:text-white">
                     <Icon /> {social.link}
                   </div>
@@ -25,16 +29,20 @@ const SocialsBlock = ({socials, compact}) => {
       )}
       {socials?.length > 0 && compact && (
         <div className="flex gap-2">
-        {socials.map((social, index) => {
-          const Icon = Socials[social.service].icon;
-          return (
-            <Link key={`social${index}`} to={social.link}>
-              <div className="text-md text-gray-700 dark:text-gray-200 hover:text-black hover:dark:text-white">
-                <Icon />
-              </div>
-            </Link>
-          );
-        })}
+          {socials.map((social, index) => {
+            const Icon = Socials[social.service].icon;
+            return (
+              <Link
+                key={`social${index}`}
+                to={social.link}
+                aria-label={`Link to ${social.service}`}
+              >
+                <div className="text-md text-gray-700 dark:text-gray-200 hover:text-black hover:dark:text-white">
+                  <Icon />
+                </div>
+              </Link>
+            );
+          })}
         </div>
       )}
     </>

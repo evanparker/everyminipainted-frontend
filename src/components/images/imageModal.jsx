@@ -6,6 +6,7 @@ import { FaX } from "react-icons/fa6";
 
 function ImageModal({ image, onClose, show }) {
   const [containerZoom, setContainerZoom] = useState(false);
+  const [altTextVisible, setAltTextVisible] = useState(false);
 
   const toggleZoom = useCallback(() => {
     setContainerZoom(!containerZoom);
@@ -16,32 +17,83 @@ function ImageModal({ image, onClose, show }) {
     onClose();
   }, [onClose]);
 
+  const showAltText = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    await setAltTextVisible(true);
+  };
+
+  const hideAltText = useCallback(async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setAltTextVisible(false);
+  }, []);
+
   return (
-    <Modal dismissible show={show} onClose={closeHandler} size="7xl">
+    <Modal
+      dismissible
+      show={show}
+      onClose={closeHandler}
+      size="7xl"
+      aria-label="Image Display Modal"
+    >
       <ModalBody>
-        <figure>
+        <figure aria-describedby="modal-caption" aria-label="Image Modal">
           <div
-            className={`relative ${
+            className={`relative transition-all duration-300 ${
               containerZoom
                 ? "w-[1600px] cursor-zoom-out"
                 : "w-full cursor-zoom-in"
             }`}
             onClick={toggleZoom}
+            tabIndex={0}
+            onKeyDown={(e) =>
+              e.target === e.currentTarget && e.key == "Enter"
+                ? toggleZoom()
+                : undefined
+            }
           >
             {image?.type === "s3Image" ? (
-              <S3Image image={image} width={1600} className="w-full" />
+              <S3Image
+                image={image}
+                width={1600}
+                className="w-full"
+                altText={image?.altText}
+              />
             ) : (
               <div></div>
             )}
+            {image?.altText && (
+              <>
+                <button
+                  className="absolute cursor-pointer bg-black text-white px-4 py-2 bottom-4 right-4 rounded-sm border-2 border-gray-400"
+                  tabIndex={0}
+                  onClick={altTextVisible ? hideAltText : showAltText}
+                  aria-label="Show Alt Text"
+                >
+                  {!altTextVisible && <span>ALT</span>}
+                  {altTextVisible && <span>{image?.altText}</span>}
+                </button>
+              </>
+            )}
           </div>
-          <FaX
-            className="cursor-pointer rounded-sm absolute p-2 top-10 right-10 size-10 text-gray-900 dark:text-gray-100 bg-gray-400 dark:bg-gray-600 opacity-30 hover:opacity-100"
+
+          <button
             onClick={closeHandler}
-          />
-          <figcaption className="text-m text-gray-900 dark:text-gray-200 m-2">
+            className="cursor-pointer rounded-sm absolute p-2 top-10 right-10 size-10 text-gray-900 dark:text-gray-100 bg-gray-400 dark:bg-gray-600 opacity-30 focus:opacity-100 hover:opacity-100 z-10"
+            aria-label="Close Modal"
+          >
+            <FaX className="size-full" />
+          </button>
+        </figure>
+        {image?.caption && (
+          <figcaption
+            id="modal-caption"
+            className="text-m text-gray-900 dark:text-gray-200 m-2"
+          >
             {image?.caption}
           </figcaption>
-        </figure>
+        )}
       </ModalBody>
     </Modal>
   );

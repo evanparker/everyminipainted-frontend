@@ -11,6 +11,8 @@ npm run dev
 ## TODO:
 
 - [x] Add favicon
+- [ ] Different layouts for low numbers of images.
+  - for example, a mini with one image would have the full size image rather than a thumbnail
 - [ ] Generic Form/Display Pages
   - Each entity type (mini, figure, etc.) would have a list of inputs and the field they apply to.
   - Array of objects with:

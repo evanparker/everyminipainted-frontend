@@ -15,7 +15,10 @@ const UserAvatar = ({
       {user && (
         <div className="flex items-center bg-gray-100 dark:bg-gray-700 px-5 py-3 rounded-lg">
           {isLink && (
-            <Link to={`/users/${user.username}`}>
+            <Link
+              to={`/users/${user.username}`}
+              aria-label={`Link to ${user.username}`}
+            >
               <Avatar
                 rounded
                 className=""
