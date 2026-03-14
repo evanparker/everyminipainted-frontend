@@ -19,17 +19,22 @@ const DisplayManufacturer = ({ manufacturer }) => {
         const index = manufacturer.images.indexOf(selectedImage);
 
         if (e.key === "ArrowLeft") {
+          e.preventDefault();
           setSelectedImage(manufacturer.images[Math.max(0, index - 1)]);
         } else if (e.key === "ArrowRight") {
+          e.preventDefault();
           setSelectedImage(
             manufacturer.images[
               Math.min(manufacturer.images.length - 1, index + 1)
-            ]
+            ],
           );
+        } else if (e.key === "Escape") {
+          e.preventDefault();
+          onClose();
         }
       }
     },
-    [selectedImage, manufacturer.images]
+    [selectedImage, manufacturer.images],
   );
 
   useEffect(() => {
@@ -54,18 +59,32 @@ const DisplayManufacturer = ({ manufacturer }) => {
           <Markdown>{manufacturer?.description}</Markdown>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {manufacturer?.images?.map((img) => (
-            <div
+          {manufacturer?.images?.map((img, idx) => (
+            <button
               key={img._id}
               onClick={() => setSelectedImage(img)}
-              className="cursor-pointer max-w-md flex flex-col rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800"
+              aria-label={`thumbnail-${idx}`}
+              className="cursor-pointer max-w-md rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
-              {img.type === "s3Image" ? (
-                <S3Thumbnail image={img} width={400} height={400} />
-              ) : (
-                <div></div>
-              )}
-            </div>
+              <figure
+                className="flex flex-col"
+                aria-describedby={`figcaption-${idx}`}
+              >
+                {img.type === "s3Image" ? (
+                  <S3Thumbnail image={img} width={400} height={400} />
+                ) : (
+                  <div></div>
+                )}
+                {img?.caption && (
+                  <figcaption
+                    id={`figcaption-${idx}`}
+                    className="text-sm text-gray-900 dark:text-gray-200 m-2"
+                  >
+                    {img.caption}
+                  </figcaption>
+                )}
+              </figure>
+            </button>
           ))}
         </div>
 

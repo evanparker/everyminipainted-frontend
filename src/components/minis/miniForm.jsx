@@ -1,14 +1,16 @@
+import { Button, Checkbox, Label, Textarea, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import useUserData from "../../useUserData";
-import { getMini, postMini, putMini } from "../../services/mini";
-import { Button, Checkbox, Label, Textarea, TextInput } from "flowbite-react";
-import { getFiguresBySearch } from "../../services/figure";
-import ImageSortContainer from "../images/imageSortContainer";
 import { toast } from "react-toastify/unstyled";
-import SaveToast from "../toasts/saveToast";
-import S3DragAndDrop from "../images/s3DragAndDrop";
+import { getFiguresBySearch } from "../../services/figure";
+import { putImage } from "../../services/image";
+import { getMini, postMini, putMini } from "../../services/mini";
+import useUserData from "../../useUserData";
 import AutoCompleteInput from "../autoCompleteInput";
+import ImageSortContainer from "../images/imageSortContainer";
+import S3DragAndDrop from "../images/s3DragAndDrop";
+import ImageTextFieldModal from "../images/imageTextFieldModal";
+import SaveToast from "../toasts/saveToast";
 
 const MiniForm = ({ mode }) => {
   const [mini, setMini] = useState({ name: "", images: [] });
@@ -16,6 +18,9 @@ const MiniForm = ({ mode }) => {
   const [figureResults, setFigureResults] = useState([]);
   const [selectedFigure, setSelectedFigure] = useState();
   const [figureDropdownOpen, setFigureDropdownOpen] = useState(false);
+  const [showTextFieldModal, setShowTextFieldModal] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [imageObj, setImageObj] = useState({});
   const { token, userId } = useUserData();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -81,7 +86,7 @@ const MiniForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = mini.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setMini((prevMini) => ({
       ...prevMini,
       images,
@@ -127,10 +132,41 @@ const MiniForm = ({ mode }) => {
     }
   };
 
+  const handleImageSave = async () => {
+    const imagesClone = [...mini.images];
+    imagesClone[selectedImageIndex] = imageObj;
+    setMini({ ...mini, images: imagesClone });
+    const imageResponse = await putImage(imageObj._id, imageObj);
+    if (imageResponse) {
+      toast(SaveToast, {
+        data: {
+          message: `Image Data Saved.`,
+        },
+      });
+    }
+
+    setShowTextFieldModal(false);
+  };
+
+  const handleImageEdit = (index) => {
+    setSelectedImageIndex(index);
+    setImageObj(mini?.images[index]);
+
+    setShowTextFieldModal(true);
+  };
+
   return (
     <>
       {mini && token && (userId === mini?.userId?._id || mode === "new") && (
         <div>
+          <ImageTextFieldModal
+            imageObj={imageObj}
+            show={showTextFieldModal}
+            onClose={() => setShowTextFieldModal(false)}
+            onConfirm={handleImageSave}
+            setImageObj={setImageObj}
+          />
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">
               <Label htmlFor="name1">Name</Label>
@@ -190,6 +226,7 @@ const MiniForm = ({ mode }) => {
                   onDelete={handleDelete}
                   images={mini.images}
                   onSetThumbnail={handleSetThumbnail}
+                  onEdit={handleImageEdit}
                   thumbnail={mini.thumbnail}
                 />
               </div>

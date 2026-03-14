@@ -1,4 +1,4 @@
-# everymini-frontend
+# everyminipainted-frontend
 
 A miniatures portfolio website
 
@@ -11,7 +11,20 @@ npm run dev
 ## TODO:
 
 - [x] Add favicon
-- [ ] Add Collections to botserver
+- [ ] "Post this mini link" on figure pages
+- [ ] Improve the image modal experience
+  - [ ] Zoom to the section of the image the user clicks on.
+  - [x] Don't zoom in beyond the image's native resolution
+- [ ] Different layouts for low numbers of images.
+  - for example, a mini with one image would have the full size image rather than a thumbnail
+- [ ] Generic Form/Display Pages
+  - Each entity type (mini, figure, etc.) would have a list of inputs and the field they apply to.
+  - Array of objects with:
+    - Database field
+    - Input component
+    - value
+    - onChangeHandler
+- [ ] DB backups (requires upgrade from free plan on mongo)
 - [ ] Rules/ToS/EULA/Whatever
   - [ ] Show on signup
   - [ ] Link in footer
@@ -42,6 +55,8 @@ npm run dev
     - [x] immutable? (on things like username)
 - [ ] Accessibility (a11y)
   - WCAG and inclusive design standards
+  - [x] Add Captions and AltText to images
+  - [ ] Keyboard Navigation
 - [x] Remove cloudinary support
 - [ ] Design homepage
 - [ ] Add blog/articles
@@ -58,9 +73,11 @@ npm run dev
   - [x] Serve multiple images in previews
   - [ ] Better user pages (serve description, user avatar)
   - [ ] Better index pages
-  - [ ] Fix 404's crashing
+  - [x] Fix 404's crashing
+  - [x] Add Collections to botserver
 - [x] Keyboard support
   - [x] Arrow key to change images being viewed
+  - [x] Space and Escape to close
 - [ ] Search within other entities (search on a user page for example)
 - [ ] Figure out how to merge duplicate records
   - [ ] Find a way to search for likely duplicates
@@ -75,7 +92,7 @@ npm run dev
   - [x] Saving
   - [x] Logging out
   - [ ] Errors
-- Scrape reaper/wizkids site for data
+- Scrape sites for data
   - [x] Reach out to companies
     - [ ] Archon Studios
     - [ ] Steamforged
@@ -89,6 +106,11 @@ npm run dev
 
 - [x] When deleting an image from an entity that is set to be the thumbnail, the thumbnail doesn't update and remains the deleted image
 - [x] Image cropper doesn't work on iOS.
+- Accessibility
+  - [ ] Multi-search-bar's dropdown not keyboard navigable.
+  - [x] Display thumbnails not keyboard navigable
+  - [x] Inconsistent tab order on nav bar
+  - [ ] A11y labels for buttons/inputs
 
 ### Migrations/DB Changes
 

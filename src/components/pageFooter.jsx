@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 function PageFooter() {
   return (
-    <Footer container>
+    <Footer container className="shadow bg-primary-200">
       <div className="w-full text-center">
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
           <FooterBrand
@@ -30,7 +30,7 @@ function PageFooter() {
           </FooterLinkGroup>
         </div>
         <FooterDivider />
-        <FooterCopyright by="Evan Parker" year={2025} />
+        <FooterCopyright by="Evan Parker" year={new Date().getFullYear()} />
       </div>
     </Footer>
   );

@@ -16,6 +16,8 @@ import toBool from "../../util/toBool";
 import AutoCompleteInput from "../autoCompleteInput";
 import { getFiguresBySearch } from "../../services/figure";
 import { FaTrashCan } from "react-icons/fa6";
+import ImageTextFieldModal from "../images/imageTextFieldModal";
+import { putImage } from "../../services/image";
 
 const CollectionForm = ({ mode }) => {
   const { user } = useContext(UserContext);
@@ -37,6 +39,10 @@ const CollectionForm = ({ mode }) => {
   const [figureSearch, setFigureSearch] = useState("");
   const [figureResults, setFigureResults] = useState([]);
   const [figureDropdownOpen, setFigureDropdownOpen] = useState(false);
+
+  const [showTextFieldModal, setShowTextFieldModal] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [imageObj, setImageObj] = useState({});
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -120,7 +126,7 @@ const CollectionForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = collection.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setCollection((prevCollection) => ({
       ...prevCollection,
       images,
@@ -218,10 +224,41 @@ const CollectionForm = ({ mode }) => {
     setCollection({ ...collection, figures });
   };
 
+  const handleImageSave = async () => {
+    const imagesClone = [...collection.images];
+    imagesClone[selectedImageIndex] = imageObj;
+    setCollection({ ...collection, images: imagesClone });
+    const imageResponse = await putImage(imageObj._id, imageObj);
+    if (imageResponse) {
+      toast(SaveToast, {
+        data: {
+          message: `Image Data Saved.`,
+        },
+      });
+    }
+
+    setShowTextFieldModal(false);
+  };
+
+  const handleImageEdit = (index) => {
+    setSelectedImageIndex(index);
+    setImageObj(collection?.images[index]);
+
+    setShowTextFieldModal(true);
+  };
+
   return (
     <>
       {collection && canEdit && (
         <div>
+          <ImageTextFieldModal
+            imageObj={imageObj}
+            show={showTextFieldModal}
+            onClose={() => setShowTextFieldModal(false)}
+            onConfirm={handleImageSave}
+            setImageObj={setImageObj}
+          />
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">
               <Label htmlFor="name1">Name</Label>
@@ -330,6 +367,7 @@ const CollectionForm = ({ mode }) => {
                   onSort={handleSort}
                   onDelete={handleDelete}
                   images={collection.images}
+                  onEdit={handleImageEdit}
                   thumbnail={collection.thumbnail}
                   onSetThumbnail={handleSetThumbnail}
                 />

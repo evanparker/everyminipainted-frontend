@@ -18,4 +18,9 @@ async function postImage(imageFile, signal) {
   return response;
 }
 
-export { getImage, postImage };
+async function putImage(id, image) {
+  const response = await apiClient.put(`/images/${id}`, image);
+  return response;
+}
+
+export { getImage, postImage, putImage };

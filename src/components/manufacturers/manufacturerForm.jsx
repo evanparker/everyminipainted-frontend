@@ -13,6 +13,8 @@ import S3DragAndDrop from "../images/s3DragAndDrop";
 import SocialsForm from "../socialsForm";
 import SaveToast from "../toasts/saveToast";
 import toBool from "../../util/toBool";
+import { putImage } from "../../services/image";
+import ImageTextFieldModal from "../images/imageTextFieldModal";
 
 const ManufacturerForm = ({ mode }) => {
   const { user } = useContext(UserContext);
@@ -25,6 +27,9 @@ const ManufacturerForm = ({ mode }) => {
   });
   const [canEdit, setCanEdit] = useState(false);
   const [socials, setSocials] = useState([]);
+  const [showTextFieldModal, setShowTextFieldModal] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [imageObj, setImageObj] = useState({});
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -104,7 +109,7 @@ const ManufacturerForm = ({ mode }) => {
 
   const addImages = async (newImages) => {
     let images = manufacturer.images;
-    images = [...newImages, ...images];
+    images = [...images, ...newImages];
     setManufacturer((prevManufacturer) => ({
       ...prevManufacturer,
       images,
@@ -136,10 +141,41 @@ const ManufacturerForm = ({ mode }) => {
     }));
   };
 
+  const handleImageSave = async () => {
+    const imagesClone = [...manufacturer.images];
+    imagesClone[selectedImageIndex] = imageObj;
+    setManufacturer({ ...manufacturer, images: imagesClone });
+    const imageResponse = await putImage(imageObj._id, imageObj);
+    if (imageResponse) {
+      toast(SaveToast, {
+        data: {
+          message: `Image Data Saved.`,
+        },
+      });
+    }
+
+    setShowTextFieldModal(false);
+  };
+
+  const handleImageEdit = (index) => {
+    setSelectedImageIndex(index);
+    setImageObj(manufacturer?.images[index]);
+
+    setShowTextFieldModal(true);
+  };
+
   return (
     <>
       {manufacturer && canEdit && (
         <div>
+          <ImageTextFieldModal
+            imageObj={imageObj}
+            show={showTextFieldModal}
+            onClose={() => setShowTextFieldModal(false)}
+            onConfirm={handleImageSave}
+            setImageObj={setImageObj}
+          />
+
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="block max-w-lg">
               <Label htmlFor="name1">Name</Label>
@@ -185,6 +221,7 @@ const ManufacturerForm = ({ mode }) => {
                   onSort={handleSort}
                   onDelete={handleDelete}
                   images={manufacturer.images}
+                  onEdit={handleImageEdit}
                   thumbnail={manufacturer.thumbnail}
                   onSetThumbnail={handleSetThumbnail}
                 />
