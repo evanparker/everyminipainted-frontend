@@ -1,6 +1,6 @@
 import getS3Url from "./getS3Url";
 
-const S3Image = ({ image, width, height, blur, className = "" }) => {
+const S3Image = ({ image, width, height, blur, className = "", onLoad }) => {
   const options = ["quality:80", "extend:1"];
 
   if (width !== undefined) {
@@ -20,7 +20,14 @@ const S3Image = ({ image, width, height, blur, className = "" }) => {
     extension: "png",
   });
 
-  return <img className={className} src={url} alt={image.altText || ""} />;
+  return (
+    <img
+      className={className}
+      src={url}
+      alt={image.altText || ""}
+      onLoad={onLoad}
+    />
+  );
 };
 
 export default S3Image;

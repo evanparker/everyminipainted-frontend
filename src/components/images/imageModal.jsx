@@ -1,12 +1,17 @@
 import { Modal, ModalBody } from "flowbite-react";
 import PropTypes from "prop-types";
 import S3Image from "./s3Image";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { FaX } from "react-icons/fa6";
 
 function ImageModal({ image, onClose, show }) {
   const [containerZoom, setContainerZoom] = useState(false);
   const [altTextVisible, setAltTextVisible] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState({
+    width: 0,
+    height: 0,
+  });
+  const containerRef = useRef(null);
 
   const toggleZoom = useCallback(() => {
     setContainerZoom(!containerZoom);
@@ -29,6 +34,13 @@ function ImageModal({ image, onClose, show }) {
     setAltTextVisible(false);
   }, []);
 
+  const onImageLoad = useCallback(async (e) => {
+    await setContainerZoom(false);
+
+    const { naturalWidth, naturalHeight } = e.target;
+    await setImageDimensions({ width: naturalWidth, height: naturalHeight });
+  }, []);
+
   return (
     <Modal
       dismissible
@@ -38,12 +50,17 @@ function ImageModal({ image, onClose, show }) {
       aria-label="Image Display Modal"
     >
       <ModalBody>
-        <figure aria-describedby="modal-caption" aria-label="Image Modal">
+        <figure
+          aria-describedby="modal-caption"
+          aria-label="Image Modal"
+          className="overflow-auto p-2"
+        >
           <div
-            className={`relative transition-all duration-300 ${
+            ref={containerRef}
+            className={`relative m-auto ${
               containerZoom
-                ? "w-[1600px] cursor-zoom-out"
-                : "w-full cursor-zoom-in"
+                ? `w-[1600px] cursor-zoom-out`
+                : `w-full cursor-zoom-in`
             }`}
             onClick={toggleZoom}
             tabIndex={0}
@@ -52,16 +69,19 @@ function ImageModal({ image, onClose, show }) {
                 ? toggleZoom()
                 : undefined
             }
+            style={{
+              maxWidth: `${imageDimensions.width}px`,
+            }}
           >
             {image?.type === "s3Image" ? (
               <S3Image
                 image={image}
                 width={1600}
-                className="w-full"
                 altText={image?.altText}
+                onLoad={onImageLoad}
               />
             ) : (
-              <div></div>
+              <></>
             )}
             {image?.altText && (
               <>
