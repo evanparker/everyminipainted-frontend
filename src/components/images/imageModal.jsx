@@ -22,18 +22,6 @@ function ImageModal({ image, onClose, show }) {
     onClose();
   }, [onClose]);
 
-  const showAltText = async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    await setAltTextVisible(true);
-  };
-
-  const hideAltText = useCallback(async (e) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setAltTextVisible(false);
-  }, []);
-
   const onImageLoad = useCallback(async (e) => {
     await setContainerZoom(false);
 
@@ -84,17 +72,19 @@ function ImageModal({ image, onClose, show }) {
               <></>
             )}
             {image?.altText && (
-              <>
-                <button
-                  className="absolute cursor-pointer bg-black text-white px-4 py-2 bottom-4 right-4 rounded-sm border-2 border-gray-400"
-                  tabIndex={0}
-                  onClick={altTextVisible ? hideAltText : showAltText}
-                  aria-label="Show Alt Text"
-                >
-                  {!altTextVisible && <span>ALT</span>}
-                  {altTextVisible && <span>{image?.altText}</span>}
-                </button>
-              </>
+              <button
+                className="absolute cursor-pointer bg-black text-white px-4 py-2 bottom-4 right-4 rounded-sm border-2 border-gray-400"
+                tabIndex={0}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setAltTextVisible(!altTextVisible);
+                }}
+                aria-label="Show Alt Text"
+              >
+                {!altTextVisible && <span>ALT</span>}
+                {altTextVisible && <span>{image?.altText}</span>}
+              </button>
             )}
           </div>
 
