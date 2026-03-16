@@ -13,7 +13,7 @@ npm run dev
 - [x] Add favicon
 - [ ] "Post this mini link" on figure pages
 - [ ] Improve the image modal experience
-  - [ ] Zoom to the section of the image the user clicks on.
+  - [x] Zoom to the section of the image the user clicks on.
   - [x] Don't zoom in beyond the image's native resolution
 - [ ] Different layouts for low numbers of images.
   - for example, a mini with one image would have the full size image rather than a thumbnail

@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import ImageModal from "../images/imageModal";
+import ImageModal from "../images/innerImageZoomModal";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
