@@ -43,13 +43,13 @@ function ImageModal({ image, onClose, show }) {
         >
           <InnerImageZoom
             src={url}
-            moveType="drag"
             zoomSrc={zoomUrl}
+            moveType="drag"
             hideCloseButton={true}
             ref={{ cotainer: containerRef }}
             afterZoomIn={() => setIsZoomed(true)}
             afterZoomOut={() => setIsZoomed(false)}
-            fullscreenOnMobile={true}
+            // fullscreenOnMobile={true}
             hideHint={true}
           />
           {image?.altText && !isZoomed && (
