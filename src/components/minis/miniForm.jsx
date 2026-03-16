@@ -1,8 +1,13 @@
 import { Button, Checkbox, Label, Textarea, TextInput } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { toast } from "react-toastify/unstyled";
-import { getFiguresBySearch } from "../../services/figure";
+import { getFigure, getFiguresBySearch } from "../../services/figure";
 import { putImage } from "../../services/image";
 import { getMini, postMini, putMini } from "../../services/mini";
 import useUserData from "../../useUserData";
@@ -25,16 +30,24 @@ const MiniForm = ({ mode }) => {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const [searchParams] = useSearchParams();
+
   useEffect(() => {
     const fetchData = async () => {
       const miniData = await getMini(id);
       setMini(miniData);
       setSelectedFigure(miniData.figure);
     };
+    const fetchFigure = async () => {
+      const initialFigure = await getFigure(searchParams.get("figure"));
+      chooseFigure(initialFigure);
+    };
     if (mode === "edit") {
       fetchData();
+    } else if (searchParams.get("figure")) {
+      fetchFigure();
     }
-  }, [mode, id]);
+  }, [mode, id, searchParams]);
 
   const handleSort = (position1, position2) => {
     const imagesClone = [...mini.images];

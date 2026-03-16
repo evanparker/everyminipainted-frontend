@@ -19,6 +19,7 @@ import DeleteModal from "../deleteModal";
 import DisplayFigures from "../figures/displayFigures";
 import DeleteToast from "../toasts/deleteToast";
 import DisplayManufacturer from "./displayManufacturer";
+import toBool from "../../util/toBool";
 
 const Manufacturer = () => {
   const { user } = useContext(UserContext);
@@ -30,7 +31,7 @@ const Manufacturer = () => {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || 1),
   );
   const [totalPages, setTotalPages] = useState(0);
 

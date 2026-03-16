@@ -1,6 +1,6 @@
 import { Button, Pagination } from "flowbite-react";
 import { useContext, useEffect, useState } from "react";
-import { FaPencil, FaTrashCan } from "react-icons/fa6";
+import { FaCamera, FaPencil, FaTrashCan } from "react-icons/fa6";
 import {
   Link,
   useNavigate,
@@ -30,7 +30,7 @@ const Figure = () => {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || 1),
   );
   const [totalPages, setTotalPages] = useState(0);
   const [currentCollectionsPage, setCurrentCollectionsPages] = useState(1);
@@ -148,11 +148,25 @@ const Figure = () => {
           </div>
         </>
       )}
+
+      <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">
+        Minis
+      </h3>
+      {!(minis?.length > 0) && (
+        <div className="text-sm text-gray-900 dark:text-gray-200">
+          This figure has no painted minis yet...
+        </div>
+      )}
+      <Button
+        className="max-w-42 mt-5"
+        as={Link}
+        to={`/minis/new?figure=${id}`}
+      >
+        <FaCamera className="mr-2 h-5 w-5" />
+        Post Your Own
+      </Button>
       {minis?.length > 0 && (
         <>
-          <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">
-            Minis
-          </h3>
           <div className="mt-5">
             <DisplayMinis minis={minis} />
           </div>

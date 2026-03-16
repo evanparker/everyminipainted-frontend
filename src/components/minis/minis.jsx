@@ -1,19 +1,22 @@
-import { Pagination } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Button, Pagination } from "flowbite-react";
+import { useContext, useEffect, useState } from "react";
+import { Link, useSearchParams } from "react-router-dom";
 import { itemsPerPage } from "../../constants/requestDefaults";
 import { getMinis, getMinisBySearch } from "../../services/mini";
 import DisplayMinis from "./displayMinis";
 import SearchBar from "../searchBar";
+import { FaCamera } from "react-icons/fa6";
+import UserContext from "../../userContext";
 
 const Minis = () => {
   const [minis, setMinis] = useState([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || 1),
   );
   const [totalPages, setTotalPages] = useState(0);
   const searchString = searchParams.get("search");
+  const { user } = useContext(UserContext);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -52,6 +55,14 @@ const Minis = () => {
     <>
       <div>
         <SearchBar className="mb-5" placeholder="Search Minis..." />
+        {user && (
+          <div className="mb-5 flex gap-5">
+            <Button as={Link} to={`/minis/new`}>
+              <FaCamera className="mr-2 h-5 w-5" />
+              New Mini
+            </Button>
+          </div>
+        )}
         <DisplayMinis minis={minis} />
         <div>
           {totalPages > 1 && (

@@ -51,6 +51,7 @@ function ImageModal({ image, onClose, show }) {
             afterZoomOut={() => setIsZoomed(false)}
             // fullscreenOnMobile={true}
             hideHint={true}
+            className="select-none"
           />
           {image?.altText && !isZoomed && (
             <button
