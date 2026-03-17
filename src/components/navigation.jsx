@@ -1,6 +1,5 @@
 import {
   Avatar,
-  Button,
   DarkThemeToggle,
   Dropdown,
   DropdownDivider,
@@ -13,7 +12,7 @@ import {
   NavbarToggle,
 } from "flowbite-react";
 import { useContext } from "react";
-import { FaPlus, FaUser } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa6";
 import { Link, NavLink } from "react-router-dom";
 import UserContext from "../userContext";
 import S3Image from "./images/s3Image";
@@ -71,11 +70,6 @@ function Navigation() {
             )}
           </NavLink>
         </div>
-        {user && (
-          <Button as={Link} to={`/minis/new`}>
-            <FaPlus className="inline" /> New Mini
-          </Button>
-        )}
       </NavbarCollapse>
 
       <div className="flex order-1 md:order-2 gap-5">
