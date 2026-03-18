@@ -33,7 +33,7 @@ class APIClient implements APIClientType {
   }
 
   get(url: string) {
-    const token = localStorage.getItem("token") || "{}";
+    const token = localStorage.getItem("token") || "";
     const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "GET",
@@ -47,7 +47,7 @@ class APIClient implements APIClientType {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   post(url: string, data: any) {
-    const token = localStorage.getItem("token") || "{}";
+    const token = localStorage.getItem("token") || "";
     const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "POST",
@@ -61,7 +61,7 @@ class APIClient implements APIClientType {
   }
 
   postFormData(url: string, formData: FormData, signal: AbortSignal) {
-    const token = localStorage.getItem("token") || "{}";
+    const token = localStorage.getItem("token") || "";
     const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "POST",
@@ -76,7 +76,7 @@ class APIClient implements APIClientType {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   put(url: string, data: any) {
-    const token = localStorage.getItem("token") || "{}";
+    const token = localStorage.getItem("token") || "";
     const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "PUT",
@@ -90,7 +90,7 @@ class APIClient implements APIClientType {
   }
 
   delete(url: string) {
-    const token = localStorage.getItem("token") || "{}";
+    const token = localStorage.getItem("token") || "";
     const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "DELETE",

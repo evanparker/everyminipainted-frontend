@@ -22,26 +22,18 @@ const Minis = () => {
     const fetchData = async () => {
       let results;
       if (searchString) {
-        try {
-          results = await getMinisBySearch(searchString, {
-            limit: itemsPerPage,
-            offset: (currentPage - 1) * itemsPerPage,
-          });
-        } catch (error) {
-          console.error("Error fetching search results:", error);
-        }
+        results = await getMinisBySearch(searchString, {
+          limit: itemsPerPage,
+          offset: (currentPage - 1) * itemsPerPage,
+        });
       } else {
-        try {
-          results = await getMinis({
-            limit: itemsPerPage,
-            offset: (currentPage - 1) * itemsPerPage,
-          });
-        } catch (error) {
-          console.error("Error fetching minis:", error);
-        }
+        results = await getMinis({
+          limit: itemsPerPage,
+          offset: (currentPage - 1) * itemsPerPage,
+        });
       }
-      setTotalPages(results?.totalPages);
-      setMinis(results?.docs);
+      setTotalPages(results.totalPages);
+      setMinis(results.docs);
     };
     fetchData();
   }, [searchString, currentPage]);
@@ -51,7 +43,6 @@ const Minis = () => {
   }, [searchParams]);
 
   const onPageChange = (page) => {
-    console.log("Page changed to:", page);
     setCurrentPage(page);
     const searchParams = { page };
     if (searchString) {
