@@ -1,12 +1,12 @@
 import { Modal, ModalBody } from "flowbite-react";
 import InnerImageZoom from "react-inner-image-zoom";
 import getS3Url from "./getS3Url";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import "react-inner-image-zoom/lib/styles.min.css";
 import { FaX } from "react-icons/fa6";
+import { Image } from "../../types/image.types";
 
-function ImageModal({ image, onClose, show }) {
-  const containerRef = useRef(null);
+function ImageModal({ image, onClose, show }: { image: Image | null; onClose: () => void; show: boolean }) {
   const [altTextVisible, setAltTextVisible] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
 
@@ -35,7 +35,7 @@ function ImageModal({ image, onClose, show }) {
       size="7xl"
       aria-label="Image Display Modal"
     >
-      <ModalBody className="grid justify-items-center" ref={containerRef}>
+      <ModalBody className="grid justify-items-center" >
         <figure
           aria-describedby="modal-caption"
           aria-label="Image Modal"
@@ -46,10 +46,9 @@ function ImageModal({ image, onClose, show }) {
             zoomSrc={zoomUrl}
             moveType="drag"
             hideCloseButton={true}
-            ref={{ cotainer: containerRef }}
             afterZoomIn={() => setIsZoomed(true)}
             afterZoomOut={() => setIsZoomed(false)}
-            // fullscreenOnMobile={true}
+            fullscreenOnMobile={true}
             hideHint={true}
             className="select-none"
           />

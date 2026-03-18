@@ -11,7 +11,7 @@ const DisplayMinis = ({ minis }) => {
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-      {minis.map((mini) => {
+      {minis?.map((mini) => {
         const img = mini?.thumbnail;
         return (
           <Link key={mini._id} to={"/minis/" + mini._id}>
