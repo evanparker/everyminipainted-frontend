@@ -48,12 +48,19 @@ const Figure = () => {
 
   useEffect(() => {
     const fetchFigureData = async () => {
-      const figureData = await getFigure(id);
-      setFigure(figureData);
+      try {
+        const figureData = await getFigure(id);
+        setFigure(figureData);
+      } catch (e) {
+        console.log(e);
+        if (e.status === 404) {
+          navigate("/404", { replace: true });
+        }
+      }
     };
 
     fetchFigureData();
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     const fetchFigureCollectionsData = async () => {

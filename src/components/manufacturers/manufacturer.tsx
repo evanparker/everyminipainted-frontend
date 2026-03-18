@@ -15,11 +15,12 @@ import {
   getManufacturerFigures,
 } from "../../services/manufacturer";
 import UserContext from "../../userContext";
+import toBool from "../../util/toBool";
 import DeleteModal from "../deleteModal";
 import DisplayFigures from "../figures/displayFigures";
 import DeleteToast from "../toasts/deleteToast";
 import DisplayManufacturer from "./displayManufacturer";
-import toBool from "../../util/toBool";
+
 
 const Manufacturer = () => {
   const { user } = useContext(UserContext);
@@ -31,7 +32,7 @@ const Manufacturer = () => {
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1),
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
 
@@ -47,40 +48,48 @@ const Manufacturer = () => {
 
   useEffect(() => {
     const fetchManufacturerData = async () => {
-      const manufacturerData = await getManufacturer(id);
-      setManufacturer(manufacturerData);
+      try {
+        const manufacturerData = id !== undefined && (await getManufacturer(id));
+        setManufacturer(manufacturerData);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        console.log(e);
+        if (e && e.status === 404) {
+          navigate("/404", { replace: true });
+        }
+      }
     };
 
     fetchManufacturerData();
-  }, [id]);
+  }, [id, navigate]);
 
   useEffect(() => {
     const fetchManufacturerFiguresData = async () => {
-      const results = await getManufacturerFigures(id, {
+      const results = id !== undefined && (await getManufacturerFigures(id, {
         limit: itemsPerPage,
         offset: (currentPage - 1) * itemsPerPage,
-      });
-      setTotalPages(results.totalPages);
-      setFigures(results.docs);
+      }));
+      setTotalPages(results?.totalPages);
+      setFigures(results?.docs);
     };
 
     fetchManufacturerFiguresData();
   }, [currentPage, id]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page : number) => {
     setCurrentPage(page);
-    setSearchParams({ page }, { replace: false });
+    setSearchParams({ page: page.toString() }, { replace: false });
   };
 
   const handleDeleteManufacturer = async () => {
-    const deletedManufacturer = await deleteManufacturer(id);
+    const deletedManufacturer = id && (await deleteManufacturer(id));
     if (deletedManufacturer) {
       toast(DeleteToast, {
-        data: { message: `${manufacturer.name} Deleted` },
+        data: { message: `${deletedManufacturer?.name} Deleted` },
       });
 
       navigate("/manufacturers");
