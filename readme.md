@@ -11,10 +11,13 @@ npm run dev
 ## TODO:
 
 - [x] Add favicon
-- [ ] "Post this mini link" on figure pages
+- [x] "Post this mini link" on figure pages
+- [ ] Automated front-end testing
+- [ ] Typescript.
 - [ ] Improve the image modal experience
   - [x] Zoom to the section of the image the user clicks on.
   - [x] Don't zoom in beyond the image's native resolution
+  - [ ] Fullscreen on mobile
 - [ ] Different layouts for low numbers of images.
   - for example, a mini with one image would have the full size image rather than a thumbnail
 - [ ] Generic Form/Display Pages

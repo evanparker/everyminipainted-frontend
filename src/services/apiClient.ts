@@ -1,14 +1,25 @@
 // credit to https://profy.dev/article/react-architecture-api-client
 
-class APIClient {
-  constructor(baseURL) {
+type APIClientType = {
+  baseURL: string;
+}
+
+export interface ResponseError extends Error {
+  status?: number;
+  response?: JSON;
+}
+
+class APIClient implements APIClientType {
+  baseURL: string;
+
+  constructor(baseURL : string) {
     this.baseURL = baseURL;
   }
 
-  async request(url, options) {
+  async request(url: string, options: RequestInit) {
     const response = await fetch(`${this.baseURL}${url}`, options);
     if (!response.ok) {
-      const error = new Error("HTTP Error");
+      const error: ResponseError = new Error("HTTP Error");
       error.status = response.status;
       try {
         error.response = await response.json();
@@ -21,65 +32,72 @@ class APIClient {
     return response.json();
   }
 
-  get(url) {
-    const token = JSON.parse(localStorage.getItem("token"));
+  get(url: string) {
+    const token = localStorage.getItem("token") || "";
+    const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        authorization: "Bearer " + token,
+        authorization: "Bearer " + parsedToken,
       },
     });
   }
 
-  post(url, data) {
-    const token = JSON.parse(localStorage.getItem("token"));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  post(url: string, data: any) {
+    const token = localStorage.getItem("token") || "";
+    const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        authorization: "Bearer " + token,
+        authorization: "Bearer " + parsedToken,
       },
       body: JSON.stringify(data),
     });
   }
 
-  postFormData(url, formData, signal) {
-    const token = JSON.parse(localStorage.getItem("token"));
+  postFormData(url: string, formData: FormData, signal: AbortSignal) {
+    const token = localStorage.getItem("token") || "";
+    const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "POST",
       headers: {
         "Access-Control-Allow-Origin": "*",
-        authorization: "Bearer " + token,
+        authorization: "Bearer " + parsedToken,
       },
       body: formData,
       signal,
     });
   }
 
-  put(url, data) {
-    const token = JSON.parse(localStorage.getItem("token"));
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  put(url: string, data: any) {
+    const token = localStorage.getItem("token") || "";
+    const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        authorization: "Bearer " + token,
+        authorization: "Bearer " + parsedToken,
       },
       body: JSON.stringify(data),
     });
   }
 
-  delete(url) {
-    const token = JSON.parse(localStorage.getItem("token"));
+  delete(url: string) {
+    const token = localStorage.getItem("token") || "";
+    const parsedToken = JSON.parse(token);
     return this.request(url, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         "Access-Control-Allow-Origin": "*",
-        authorization: "Bearer " + token,
+        authorization: "Bearer " + parsedToken,
       },
     });
   }

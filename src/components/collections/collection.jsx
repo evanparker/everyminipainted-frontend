@@ -31,12 +31,18 @@ const Collection = () => {
 
   useEffect(() => {
     const fetchCollectionData = async () => {
-      const collectionData = await getCollection(id);
-      setCollection(collectionData);
+      try {
+        const collectionData = await getCollection(id);
+        setCollection(collectionData);
+      } catch (e) {
+        if (e.status === 404) {
+          navigate("/404", { replace: true });
+        }
+      }
     };
 
     fetchCollectionData();
-  }, [id]);
+  }, [id, navigate]);
 
   const handleDeleteCollection = async () => {
     const deletedCollection = await deleteCollection(id);
