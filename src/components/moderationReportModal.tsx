@@ -11,11 +11,11 @@ import { useState } from "react";
 import { FaFlag } from "react-icons/fa6";
 import moderationReportReasons from "../constants/moderationReportReasons";
 
-function ModerationReportModal({ show, onClose, onConfirm }) {
+function ModerationReportModal({ show, onClose, onConfirm }: { show: boolean; onClose: () => void; onConfirm: (data: { reason: string; description: string }) => void }) {
   const [reason, setReason] = useState(moderationReportReasons[0].name);
   const [description, setDescription] = useState("");
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onConfirm({ reason, description });
     setReason(moderationReportReasons[0].name);
@@ -23,7 +23,7 @@ function ModerationReportModal({ show, onClose, onConfirm }) {
     onClose();
   };
 
-  const onReasonChange = (e) => {
+  const onReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setReason(e.target.value);
   };
 
@@ -77,7 +77,7 @@ function ModerationReportModal({ show, onClose, onConfirm }) {
             <Button type="submit" color="red">
               <FaFlag className="mr-2 h-5 w-5" /> Report
             </Button>
-            <Button onClick={clearModalAndClose}>Cancel</Button>
+            <Button color="gray" onClick={clearModalAndClose}>Cancel</Button>
           </div>
         </form>
       </ModalBody>
