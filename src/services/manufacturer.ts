@@ -1,7 +1,7 @@
 import { Manufacturer } from "../types/manufacturer.types";
 import { apiClient } from "./apiClient";
 
-async function getManufacturers({ limit = 20, offset = 0 }) {
+async function getManufacturers({ limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
   const response = await apiClient.get(
     `/manufacturers/?limit=${limit}&offset=${offset}`
   );
@@ -20,7 +20,7 @@ async function getManufacturerFigures(id: string, { limit = 20, offset = 0 }: { 
   return response;
 }
 
-async function getManufacturersBySearch(search:string, { limit = 20, offset = 0 }) {
+async function getManufacturersBySearch(search:string, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
   const response = await apiClient.get(
     `/manufacturers/search?search=${search}&limit=${limit}&offset=${offset}`
   );
