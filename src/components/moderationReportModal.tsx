@@ -10,9 +10,10 @@ import {
 import { useState } from "react";
 import { FaFlag } from "react-icons/fa6";
 import moderationReportReasons from "../constants/moderationReportReasons";
+import { ModerationReason } from "../types/moderationReport.types";
 
-function ModerationReportModal({ show, onClose, onConfirm }: { show: boolean; onClose: () => void; onConfirm: (data: { reason: string; description: string }) => void }) {
-  const [reason, setReason] = useState(moderationReportReasons[0].name);
+function ModerationReportModal({ show, onClose, onConfirm }: { show: boolean; onClose: () => void; onConfirm: (data: { reason: ModerationReason; description: string }) => void }) {
+  const [reason, setReason] = useState<ModerationReason>(moderationReportReasons[0].name);
   const [description, setDescription] = useState("");
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -24,7 +25,7 @@ function ModerationReportModal({ show, onClose, onConfirm }: { show: boolean; on
   };
 
   const onReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setReason(e.target.value);
+    setReason(e.target.value as ModerationReason);
   };
 
   const clearModalAndClose = () => {

@@ -28,7 +28,10 @@ async function putUser(id: string, user: User) {
   return response;
 }
 
-async function addFavorite(id: string) {
+async function addFavorite(id: string | undefined) {
+  if (!id) {
+    return null;
+  }
   const response = await apiClient.put(`/users/me/setfavorite`, {
     id,
     value: true,
@@ -36,7 +39,10 @@ async function addFavorite(id: string) {
   return response;
 }
 
-async function removeFavorite(id: string) {
+async function removeFavorite(id: string | undefined) {
+  if (!id) {
+    return null;
+  }
   const response = await apiClient.put(`/users/me/setfavorite`, {
     id,
     value: false,

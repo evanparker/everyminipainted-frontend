@@ -8,7 +8,10 @@ async function getMinis({ limit = 20, offset = 0 }: { limit?: number; offset?: n
   return response;
 }
 
-async function getMini(id:string ) {
+async function getMini(id: string | undefined) {
+  if (!id) {
+    return null;
+  }
   const response = await apiClient.get(`/minis/${id}`);
   return response;
 }
@@ -18,12 +21,18 @@ async function postMini(mini: Mini) {
   return response;
 }
 
-async function putMini(id: string, mini: Mini) {
+async function putMini(id: string | undefined, mini: Mini) {
+  if (!id) {
+    return null;
+  }
   const response = await apiClient.put(`/minis/${id}`, mini);
   return response;
 }
 
-async function deleteMini(id: string) {
+async function deleteMini(id: string | undefined) {
+  if (!id) {
+    return null;
+  }
   const response = await apiClient.delete(`/minis/${id}`);
   return response;
 }

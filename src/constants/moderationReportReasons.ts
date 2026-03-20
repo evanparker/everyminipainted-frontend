@@ -1,18 +1,20 @@
-const moderationReportReasons = [
+import { ModerationReason } from "../types/moderationReport.types";
+
+const moderationReportReasons: { name: ModerationReason; description: string }[] = [
   {
-    name: "NSFW",
+    name: ModerationReason.NSFW,
     description: "NSFW - Not Safe For Work. Nudity, sexual content etc.",
   },
-  { name: "notAMini", description: "Not a mini" },
-  { name: "hateSpeech", description: "Hate Speech" },
-  { name: "harassment", description: "Harassment" },
-  { name: "spam", description: "Spam" },
-  { name: "privacyViolation", description: "Privacy Violation" },
+  { name: ModerationReason.notAMini, description: "Not a mini" },
+  { name: ModerationReason.hateSpeech, description: "Hate Speech" },
+  { name: ModerationReason.harassment, description: "Harassment" },
+  { name: ModerationReason.spam, description: "Spam" },
+  { name: ModerationReason.privacyViolation, description: "Privacy Violation" },
   {
-    name: "intellectualPropertyViolation",
+    name: ModerationReason.intellectualPropertyViolation,
     description: "Intellectual Property Violation",
   },
-  { name: "other", description: "Other (please describe)" },
+  { name: ModerationReason.other, description: "Other (please describe)" },
 ];
 
 export default moderationReportReasons;

@@ -53,7 +53,6 @@ const Manufacturer = () => {
         setManufacturer(manufacturerData);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
-        console.log(e);
         if (e && e.status === 404) {
           navigate("/404", { replace: true });
         }
