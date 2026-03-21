@@ -66,7 +66,7 @@ const Mini = () => {
 
   const handleModerationReport = async (data: { reason: ModerationReason; description: string }) => {
     if (mini) {
-      postModerationReport({ mini: mini._id, ...data });
+      postModerationReport({ mini: mini, ...data });
     }
     toast(ModerationReportToast, {});
   };

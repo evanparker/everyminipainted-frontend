@@ -1,6 +1,12 @@
 import S3Image from "./s3Image";
 
-const S3Thumbnail = ({ image, width, height, blur, className = "" }) => {
+const S3Thumbnail = ({
+  image,
+  width,
+  height,
+  blur = false,
+  className = "",
+}) => {
   className += " absolute top-0";
   return (
     <div className="relative h-0 pt-[100%]">

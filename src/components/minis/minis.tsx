@@ -7,12 +7,13 @@ import DisplayMinis from "./displayMinis";
 import SearchBar from "../searchBar";
 import { FaCamera } from "react-icons/fa6";
 import UserContext from "../../userContext";
+import { Mini } from "../../types/mini.types";
 
 const Minis = () => {
-  const [minis, setMinis] = useState([]);
+  const [minis, setMinis] = useState<Mini[]>([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1),
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
   const searchString = searchParams.get("search");
@@ -47,13 +48,12 @@ const Minis = () => {
   }, [searchString, currentPage]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
-  const onPageChange = (page) => {
-    console.log("Page changed to:", page);
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    const searchParams = { page };
+    const searchParams: { page?: string; search?: string } = { page: page.toString() };
     if (searchString) {
       searchParams.search = searchString;
     }
