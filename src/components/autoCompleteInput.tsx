@@ -123,10 +123,9 @@ function AutoCompleteInput<Type extends { _id: string; name: string }>({
                   activeItem === idx + 1 ? "bg-gray-100 dark:bg-gray-600" : ""
                 } w-full p-2 text-sm rounded-sm hover:bg-gray-100 dark:hover:bg-gray-600 font-medium text-gray-900 dark:text-gray-300`}
               >
-                {item.name as unknown as string}{" "}
+                {item.name}{" "}
                 <span className="text-gray-700 dark:text-gray-500">
-                  {"partNumber" in item &&
-                    (item.partNumber as unknown as string)}
+                  {"partNumber" in item && (item.partNumber as string)}
                 </span>
               </li>
             ))}
