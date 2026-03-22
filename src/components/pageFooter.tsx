@@ -6,7 +6,6 @@ import {
   FooterLink,
   FooterLinkGroup,
 } from "flowbite-react";
-import { Link } from "react-router-dom";
 
 function PageFooter() {
   return (
@@ -20,13 +19,9 @@ function PageFooter() {
             name="Every Mini Painted"
           />
           <FooterLinkGroup>
-            <FooterLink as={Link} to="/about">
-              About
-            </FooterLink>
-            {/* <FooterLink as={Link} to="/privacy">Privacy Policy</FooterLink> */}
-            <FooterLink as={Link} to="/contact">
-              Contact
-            </FooterLink>
+            <FooterLink href="/about">About</FooterLink>
+            {/* <FooterLink href="/privacy">Privacy Policy</FooterLink> */}
+            <FooterLink href="/contact">Contact</FooterLink>
           </FooterLinkGroup>
         </div>
         <FooterDivider />

@@ -1,6 +1,15 @@
+import { Image } from "../types/image.types";
 import getS3Url from "./images/getS3Url";
 
-function HeadTags({ name, description, thumbnail }) {
+function HeadTags({
+  name,
+  description,
+  thumbnail,
+}: {
+  name: string;
+  description: string;
+  thumbnail?: Image;
+}) {
   let thumbnailImageURL = "";
 
   if (thumbnail?.type === "s3Image") {

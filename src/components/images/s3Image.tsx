@@ -1,6 +1,21 @@
+import { Image } from "../../types/image.types";
 import getS3Url from "./getS3Url";
 
-const S3Image = ({ image, width, height, blur, className = "", onLoad }) => {
+const S3Image = ({
+  image,
+  width,
+  height,
+  blur,
+  className = "",
+  onLoad,
+}: {
+  image: Image;
+  width?: number;
+  height?: number;
+  blur?: boolean;
+  className?: string;
+  onLoad?: () => void;
+}) => {
   const options = ["quality:80", "extend:1"];
 
   if (width !== undefined) {

@@ -23,7 +23,7 @@ function Navigation() {
     <Navbar fluid rounded className="shadow bg-primary-200">
       <NavbarToggle />
 
-      <NavbarBrand as={Link} to={"/"}>
+      <NavbarBrand href={"/"}>
         <img src="/emplogo.png" className="mr-3 h-9" alt="EMP Logo" />
         <span className="hidden sm:block self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Every Mini Painted
@@ -89,7 +89,7 @@ function Navigation() {
                     <div className="w-10 h-10 overflow-hidden rounded-full">
                       {user?.avatar.type === "s3Image" ? (
                         <S3Image
-                          image={user?.avatar}
+                          image={user.avatar}
                           width={120}
                           height={120}
                           {...props}
@@ -126,6 +126,7 @@ function Navigation() {
               <DropdownItem
                 className="dark:text-white"
                 as={Link}
+                to={"/"}
                 onClick={logout}
               >
                 Sign out
