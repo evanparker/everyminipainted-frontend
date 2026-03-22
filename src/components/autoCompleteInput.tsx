@@ -1,6 +1,6 @@
 import { FaMagnifyingGlass } from "react-icons/fa6";
 import { TextInput } from "flowbite-react";
-import { ChangeEvent, Key, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
 function AutoCompleteInput<Type extends { _id: string; name: string }>({
   chooseItem,
@@ -16,7 +16,7 @@ function AutoCompleteInput<Type extends { _id: string; name: string }>({
   chooseItem: (item: Type | undefined) => void;
   dropdownOpen: boolean;
   setDropdownOpen: (open: boolean) => void;
-  onChange: (value: ChangeEvent<HTMLInputElement>) => void;
+  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
   onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
   items: Type[];
   value: string;
@@ -116,7 +116,7 @@ function AutoCompleteInput<Type extends { _id: string; name: string }>({
             {items.map((item, idx) => (
               <li
                 id={`dropdownOption${idx + 1}`}
-                key={item._id as unknown as Key}
+                key={item._id as unknown as React.Key}
                 onClick={() => chooseItem(item)}
                 onMouseOver={() => setActiveItem(idx + 1)}
                 className={`${
