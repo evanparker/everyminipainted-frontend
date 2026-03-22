@@ -1,4 +1,4 @@
-const toBool = (value) => {
+const toBool = (value: boolean | string | undefined) => {
   if (value === undefined) {
     return false;
   } else if (typeof value === "string" && value.toLowerCase() === "false") {

@@ -173,7 +173,7 @@ const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
     );
   };
 
-  const chooseFigure = (figure: Figure) => {
+  const chooseFigure = (figure: Figure | undefined) => {
     setSelectedFigure(figure);
     setFigureSearch(figure?.name || "");
     setFigureDropdownOpen(false);
@@ -193,8 +193,13 @@ const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
     setFigureResults(figures);
   };
 
-  const handleFigureSearchBlur = (e: React.FocusEvent<HTMLInputElement>) => {
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  const handleFigureSearchBlur = (
+    e: React.FocusEvent | React.KeyboardEvent,
+  ) => {
+    if (
+      "relatedTarget" in e &&
+      (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget))
+    ) {
       setFigureDropdownOpen(false);
     }
   };
@@ -276,12 +281,14 @@ const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
                 </div>
               )}
 
-              <AutoCompleteInput
+              <AutoCompleteInput<Figure>
                 chooseItem={chooseFigure}
                 dropdownOpen={figureDropdownOpen}
                 setDropdownOpen={setFigureDropdownOpen}
                 onChange={handleFigureSearchChange}
-                onFocus={handleFigureSearchChange}
+                onFocus={(e: React.FocusEvent<HTMLInputElement>) =>
+                  handleFigureSearchChange(e)
+                }
                 value={figureSearch}
                 items={figureResults}
                 onBlur={handleFigureSearchBlur}
