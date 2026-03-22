@@ -197,8 +197,9 @@ const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
     e: React.FocusEvent | React.KeyboardEvent,
   ) => {
     if (
-      "relatedTarget" in e &&
-      (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget))
+      !("relatedTarget" in e) ||
+      !e.relatedTarget ||
+      !e.currentTarget.contains(e.relatedTarget)
     ) {
       setFigureDropdownOpen(false);
     }
