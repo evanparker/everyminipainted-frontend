@@ -1,8 +1,15 @@
 import { Button, Modal, ModalBody, ModalHeader } from "flowbite-react";
-import PropTypes from "prop-types";
 import { FaTrashCan } from "react-icons/fa6";
 
-function DeleteModal({ show, onClose, onConfirm }) {
+function DeleteModal({
+  show,
+  onClose,
+  onConfirm,
+}: {
+  show: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) {
   return (
     <Modal dismissible show={show} onClose={onClose} size="xl" className="">
       <ModalHeader>Are you sure?</ModalHeader>
@@ -15,11 +22,5 @@ function DeleteModal({ show, onClose, onConfirm }) {
     </Modal>
   );
 }
-
-DeleteModal.propTypes = {
-  onConfirm: PropTypes.func,
-  onClose: PropTypes.func,
-  show: PropTypes.bool,
-};
 
 export default DeleteModal;

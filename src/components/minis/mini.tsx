@@ -20,10 +20,12 @@ import DeleteToast from "../toasts/deleteToast";
 import ModerationReportToast from "../toasts/moderationReportToast";
 import UserAvatar from "../users/userAvatar";
 import DisplayMini from "./displayMini";
+import type { Mini } from "../../types/mini.types";
+import { ModerationReason } from "../../types/moderationReport.types";
 
 const Mini = () => {
   const navigate = useNavigate();
-  const [mini, setMini] = useState();
+  const [mini, setMini] = useState<Mini | undefined>(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showModerationReportModal, setShowModerationReportModal] =
     useState(false);
@@ -36,8 +38,9 @@ const Mini = () => {
       try {
         const miniData = await getMini(id);
         setMini(miniData);
-      } catch (e) {
-        if (e.status === 404) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (e: any) {
+        if (e && e.status === 404) {
           navigate("/404", { replace: true });
         }
       }
@@ -46,7 +49,7 @@ const Mini = () => {
   }, [id, navigate]);
 
   useEffect(() => {
-    if (user?.favorites[id]) {
+    if (id && user?.favorites[id]) {
       setFavorited(true);
     }
   }, [id, user]);
@@ -55,29 +58,38 @@ const Mini = () => {
     const deletedMini = await deleteMini(id);
     if (deletedMini) {
       toast(DeleteToast, {
-        data: { message: `${mini.name} Deleted` },
+        data: { message: `${mini?.name} Deleted` },
       });
       navigate("/");
     }
   };
 
-  const handleModerationReport = async (data) => {
-    postModerationReport({ mini: mini._id, ...data });
+  const handleModerationReport = async (data: {
+    reason: ModerationReason;
+    description: string;
+  }) => {
+    if (!mini) return;
+    postModerationReport({ mini: mini, ...data });
     toast(ModerationReportToast, {});
   };
 
   const favorite = async () => {
+    if (!mini) return;
     try {
       if (favorited) {
         const updatedUser = await removeFavorite(id);
         setFavorited(false);
         setUser({ ...user, favorites: updatedUser.favorites });
-        setMini({ ...mini, favorites: mini.favorites - 1 });
+        if (mini) {
+          setMini({ ...mini, favorites: mini.favorites - 1 });
+        }
       } else {
         const updatedUser = await addFavorite(id);
         setFavorited(true);
         setUser({ ...user, favorites: updatedUser.favorites });
-        setMini({ ...mini, favorites: mini.favorites + 1 });
+        if (mini) {
+          setMini({ ...mini, favorites: mini.favorites + 1 });
+        }
       }
     } catch (e) {
       console.error(e);
@@ -116,14 +128,16 @@ const Mini = () => {
             )}
             <span>{mini.favorites}</span>
           </Button>
-          <Button
-            className="max-w-36"
-            disabled={!user}
-            color="red"
-            onClick={() => setShowModerationReportModal(true)}
-          >
-            <FaFlag className="mr-2 h-5 w-5" /> Report
-          </Button>
+          {user && (
+            <Button
+              className="max-w-36"
+              disabled={!user}
+              color="red"
+              onClick={() => setShowModerationReportModal(true)}
+            >
+              <FaFlag className="mr-2 h-5 w-5" /> Report
+            </Button>
+          )}
         </div>
       )}
 
@@ -133,7 +147,7 @@ const Mini = () => {
         </div>
       )}
       <div className="flex gap-5">
-        {user?._id === mini?.userId._id && (
+        {user && user?._id === mini?.userId._id && (
           <Button
             className="max-w-36 mt-5"
             as={Link}
@@ -143,7 +157,7 @@ const Mini = () => {
             Edit
           </Button>
         )}
-        {user?._id === mini?.userId._id && (
+        {user && user?._id === mini?.userId._id && (
           <Button
             color="red"
             className="max-w-36 mt-5"

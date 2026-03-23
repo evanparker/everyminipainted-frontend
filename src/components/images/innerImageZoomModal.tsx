@@ -6,7 +6,7 @@ import "react-inner-image-zoom/lib/styles.min.css";
 import { FaX } from "react-icons/fa6";
 import { Image } from "../../types/image.types";
 
-function ImageModal({ image, onClose, show }: { image: Image | null; onClose: () => void; show: boolean }) {
+function ImageModal({ image, onClose, show }: { image: Image | undefined; onClose: () => void; show: boolean }) {
   const [altTextVisible, setAltTextVisible] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
 

@@ -33,8 +33,8 @@ class APIClient implements APIClientType {
   }
 
   get(url: string) {
-    const token = localStorage.getItem("token") || "{}";
-    const parsedToken = JSON.parse(token);
+    const token = localStorage.getItem("token");
+    const parsedToken = token && JSON.parse(token);
     return this.request(url, {
       method: "GET",
       headers: {
@@ -45,10 +45,9 @@ class APIClient implements APIClientType {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  post(url: string, data: any) {
-    const token = localStorage.getItem("token") || "{}";
-    const parsedToken = JSON.parse(token);
+  post(url: string, data: unknown) {
+    const token = localStorage.getItem("token");
+    const parsedToken = token && JSON.parse(token);
     return this.request(url, {
       method: "POST",
       headers: {
@@ -61,8 +60,8 @@ class APIClient implements APIClientType {
   }
 
   postFormData(url: string, formData: FormData, signal: AbortSignal) {
-    const token = localStorage.getItem("token") || "{}";
-    const parsedToken = JSON.parse(token);
+    const token = localStorage.getItem("token");
+    const parsedToken = token && JSON.parse(token);
     return this.request(url, {
       method: "POST",
       headers: {
@@ -74,10 +73,9 @@ class APIClient implements APIClientType {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  put(url: string, data: any) {
-    const token = localStorage.getItem("token") || "{}";
-    const parsedToken = JSON.parse(token);
+  put(url: string, data: unknown) {
+    const token = localStorage.getItem("token");
+    const parsedToken = token && JSON.parse(token);
     return this.request(url, {
       method: "PUT",
       headers: {
@@ -90,8 +88,8 @@ class APIClient implements APIClientType {
   }
 
   delete(url: string) {
-    const token = localStorage.getItem("token") || "{}";
-    const parsedToken = JSON.parse(token);
+    const token = localStorage.getItem("token");
+    const parsedToken = token && JSON.parse(token);
     return this.request(url, {
       method: "DELETE",
       headers: {

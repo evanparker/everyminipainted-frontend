@@ -1,3 +1,4 @@
+import { ModerationReport } from "../types/moderationReport.types";
 import { apiClient } from "./apiClient";
 
 async function getModerationReports({
@@ -15,6 +16,10 @@ async function getModerationReportsByUserId({
   limit = 20,
   offset = 0,
   userId,
+}: {
+  limit?: number;
+  offset?: number;
+  userId: string;
 }) {
   const response = await apiClient.get(
     `/moderation-reports/?limit=${limit}&offset=${offset}&userId=${userId}`
@@ -22,19 +27,19 @@ async function getModerationReportsByUserId({
   return response;
 }
 
-async function getModerationReportsOnUserId({ userId }) {
+async function getModerationReportsOnUserId({ userId }: { userId: string }) {
   const response = await apiClient.get(
     `/moderation-reports/?reportedUser=${userId}`
   );
   return response;
 }
 
-async function getModerationReport(id) {
+async function getModerationReport(id: string) {
   const response = await apiClient.get(`/moderation-reports/${id}`);
   return response;
 }
 
-async function postModerationReport(moderationReport) {
+async function postModerationReport(moderationReport: ModerationReport) {
   const response = await apiClient.post(
     `/moderation-reports/`,
     moderationReport
@@ -42,7 +47,7 @@ async function postModerationReport(moderationReport) {
   return response;
 }
 
-async function putModerationReport(id, moderationReport) {
+async function putModerationReport(id: string, moderationReport: ModerationReport) {
   const response = await apiClient.put(
     `/moderation-reports/${id}`,
     moderationReport
@@ -50,7 +55,7 @@ async function putModerationReport(id, moderationReport) {
   return response;
 }
 
-async function deleteModerationReport(id) {
+async function deleteModerationReport(id: string) {
   const response = await apiClient.delete(`/moderation-reports/${id}`);
   return response;
 }

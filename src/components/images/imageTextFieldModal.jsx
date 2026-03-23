@@ -21,7 +21,7 @@ function ImageTextFieldModal({
       <ModalHeader>Captions and Alt Text</ModalHeader>
       <ModalBody className="flex gap-5">
         <div className="w-40 h-40">
-          {imageObj.type === "s3Image" ? (
+          {imageObj?.type === "s3Image" ? (
             <S3Image image={imageObj} width={400} height={400} />
           ) : (
             <div></div>
@@ -33,7 +33,7 @@ function ImageTextFieldModal({
             <TextInput
               id="caption"
               type="text"
-              value={imageObj.caption}
+              value={imageObj?.caption}
               onChange={(e) =>
                 setImageObj({ ...imageObj, caption: e.target.value })
               }
@@ -44,7 +44,7 @@ function ImageTextFieldModal({
             <TextInput
               id="altText"
               type="text"
-              value={imageObj.altText}
+              value={imageObj?.altText}
               onChange={(e) =>
                 setImageObj({ ...imageObj, altText: e.target.value })
               }

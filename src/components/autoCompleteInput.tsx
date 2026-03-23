@@ -2,7 +2,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { TextInput } from "flowbite-react";
 import { useRef, useState } from "react";
 
-function AutoCompleteInput({
+function AutoCompleteInput<Type extends { _id: string; name: string }>({
   chooseItem,
   dropdownOpen,
   setDropdownOpen,
@@ -12,11 +12,21 @@ function AutoCompleteInput({
   value,
   onBlur,
   id = "item1",
+}: {
+  chooseItem: (item: Type | undefined) => void;
+  dropdownOpen: boolean;
+  setDropdownOpen: (open: boolean) => void;
+  onChange: (value: React.ChangeEvent<HTMLInputElement>) => void;
+  onFocus: (e: React.FocusEvent<HTMLInputElement>) => void;
+  items: Type[];
+  value: string;
+  onBlur: (e: React.FocusEvent | React.KeyboardEvent) => void;
+  id?: string;
 }) {
   const [activeItem, setActiveItem] = useState(-1);
-  const dropdownContainerRef = useRef();
+  const dropdownContainerRef = useRef(null as unknown as HTMLUListElement);
 
-  const handleOnKeyDown = async (e) => {
+  const handleOnKeyDown = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (!dropdownOpen) {
       if (e.key === "ArrowUp" || e.key === "ArrowDown") {
         await setDropdownOpen(true);
@@ -27,29 +37,32 @@ function AutoCompleteInput({
       case "ArrowDown":
         e.preventDefault();
         activeElement = document.getElementById(
-          `dropdownOption${Math.min(items.length, activeItem + 1)}`
+          `dropdownOption${Math.min(items.length, activeItem + 1)}`,
         );
-        dropdownContainerRef.current.scrollTo({
-          top:
-            activeElement.offsetTop -
-            dropdownContainerRef.current.offsetHeight / 2,
-          behavior: "smooth",
-        });
-        setActiveItem(Math.min(items.length, activeItem + 1));
+        if (activeElement) {
+          dropdownContainerRef.current?.scrollTo({
+            top:
+              activeElement.offsetTop -
+              dropdownContainerRef.current?.offsetHeight / 2,
+            behavior: "smooth",
+          });
+          setActiveItem(Math.min(items.length, activeItem + 1));
+        }
         break;
       case "ArrowUp":
         e.preventDefault();
         activeElement = document.getElementById(
-          `dropdownOption${Math.max(0, activeItem - 1)}`
+          `dropdownOption${Math.max(0, activeItem - 1)}`,
         );
-        dropdownContainerRef.current.scrollTo({
-          top:
-            activeElement.offsetTop -
-            dropdownContainerRef.current.offsetHeight / 2,
-          behavior: "smooth",
-        });
-
-        setActiveItem(Math.max(0, activeItem - 1));
+        if (activeElement) {
+          dropdownContainerRef.current?.scrollTo({
+            top:
+              activeElement.offsetTop -
+              dropdownContainerRef.current?.offsetHeight / 2,
+            behavior: "smooth",
+          });
+          setActiveItem(Math.max(0, activeItem - 1));
+        }
         break;
       case "Enter":
         e.preventDefault();
@@ -103,7 +116,7 @@ function AutoCompleteInput({
             {items.map((item, idx) => (
               <li
                 id={`dropdownOption${idx + 1}`}
-                key={item._id}
+                key={item._id as unknown as React.Key}
                 onClick={() => chooseItem(item)}
                 onMouseOver={() => setActiveItem(idx + 1)}
                 className={`${
@@ -112,7 +125,7 @@ function AutoCompleteInput({
               >
                 {item.name}{" "}
                 <span className="text-gray-700 dark:text-gray-500">
-                  {item.partNumber}
+                  {"partNumber" in item && (item.partNumber as string)}
                 </span>
               </li>
             ))}

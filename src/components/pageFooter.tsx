@@ -6,25 +6,39 @@ import {
   FooterLink,
   FooterLinkGroup,
 } from "flowbite-react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function PageFooter() {
+  const navigate = useNavigate();
   return (
     <Footer container className="shadow bg-primary-200">
       <div className="w-full text-center">
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
           <FooterBrand
-            href="/"
+            onClick={() => navigate("/")}
             src="/emplogo.png"
             alt="Every Mini Painted Logo"
             name="Every Mini Painted"
           />
           <FooterLinkGroup>
-            <FooterLink as={Link} to="/about">
+            <FooterLink
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/about");
+              }}
+              href={"/about"}
+            >
               About
             </FooterLink>
-            {/* <FooterLink as={Link} to="/privacy">Privacy Policy</FooterLink> */}
-            <FooterLink as={Link} to="/contact">
+            {/* <FooterLink href="/rules">Rules</FooterLink> */}
+            {/* <FooterLink href="/privacy">Privacy Policy</FooterLink> */}
+            <FooterLink
+              onClick={(e) => {
+                e.preventDefault();
+                navigate("/contact");
+              }}
+              href={"/contact"}
+            >
               Contact
             </FooterLink>
           </FooterLinkGroup>

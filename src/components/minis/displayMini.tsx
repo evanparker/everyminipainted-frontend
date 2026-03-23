@@ -1,19 +1,20 @@
-import PropTypes from "prop-types";
 import ImageModal from "../images/innerImageZoomModal";
 import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
 import S3Thumbnail from "../images/s3Thumbnail";
+import { Mini } from "../../types/mini.types";
+import { Image } from "../../types/image.types";
 
-const DisplayMini = ({ mini }) => {
-  const [selectedImage, setSelectedImage] = useState();
+const DisplayMini = ({ mini }: { mini: Mini }) => {
+  const [selectedImage, setSelectedImage] = useState<Image | undefined>();
 
   const onClose = () => {
     setSelectedImage(undefined);
   };
 
   const onArrowKeyDown = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (selectedImage) {
         const index = mini.images.indexOf(selectedImage);
 
@@ -100,10 +101,6 @@ const DisplayMini = ({ mini }) => {
       </div>
     </>
   );
-};
-
-DisplayMini.propTypes = {
-  mini: PropTypes.object,
 };
 
 export default DisplayMini;

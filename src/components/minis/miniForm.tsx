@@ -1,5 +1,5 @@
 import { Button, Checkbox, Label, Textarea, TextInput } from "flowbite-react";
-import { useEffect, useState } from "react";
+import { FormEvent, useEffect, useState } from "react";
 import {
   Link,
   useNavigate,
@@ -10,22 +10,27 @@ import { toast } from "react-toastify/unstyled";
 import { getFigure, getFiguresBySearch } from "../../services/figure";
 import { putImage } from "../../services/image";
 import { getMini, postMini, putMini } from "../../services/mini";
+import { Figure } from "../../types/figure.types";
+import { Image } from "../../types/image.types";
+import { Mini } from "../../types/mini.types";
 import useUserData from "../../useUserData";
 import AutoCompleteInput from "../autoCompleteInput";
 import ImageSortContainer from "../images/imageSortContainer";
-import S3DragAndDrop from "../images/s3DragAndDrop";
 import ImageTextFieldModal from "../images/imageTextFieldModal";
+import S3DragAndDrop from "../images/s3DragAndDrop";
 import SaveToast from "../toasts/saveToast";
 
-const MiniForm = ({ mode }) => {
-  const [mini, setMini] = useState({ name: "", images: [] });
+const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
+  const [mini, setMini] = useState<Mini | undefined>(undefined);
   const [figureSearch, setFigureSearch] = useState("");
-  const [figureResults, setFigureResults] = useState([]);
-  const [selectedFigure, setSelectedFigure] = useState();
+  const [figureResults, setFigureResults] = useState<Figure[]>([]);
+  const [selectedFigure, setSelectedFigure] = useState<Figure | undefined>(
+    undefined,
+  );
   const [figureDropdownOpen, setFigureDropdownOpen] = useState(false);
   const [showTextFieldModal, setShowTextFieldModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [imageObj, setImageObj] = useState({});
+  const [imageObj, setImageObj] = useState<Image | undefined>();
   const { token, userId } = useUserData();
   const { id } = useParams();
   const navigate = useNavigate();
@@ -39,17 +44,39 @@ const MiniForm = ({ mode }) => {
       setSelectedFigure(miniData.figure);
     };
     const fetchFigure = async () => {
-      const initialFigure = await getFigure(searchParams.get("figure"));
+      const initialFigure = await getFigure(searchParams.get("figure") || "");
       chooseFigure(initialFigure);
     };
     if (mode === "edit") {
       fetchData();
     } else if (searchParams.get("figure")) {
+      setMini({
+        name: "",
+        userId: userId,
+        images: [],
+        thumbnail: undefined,
+        figure: undefined,
+        description: "",
+        favorites: 0,
+      });
       fetchFigure();
+    } else {
+      setMini({
+        name: "",
+        userId: userId,
+        images: [],
+        thumbnail: undefined,
+        figure: undefined,
+        description: "",
+        favorites: 0,
+      });
     }
-  }, [mode, id, searchParams]);
+  }, [mode, id, searchParams, userId]);
 
-  const handleSort = (position1, position2) => {
+  const handleSort = (position1: number, position2: number) => {
+    if (!mini) {
+      return;
+    }
     const imagesClone = [...mini.images];
     const temp = imagesClone[position1];
     imagesClone[position1] = imagesClone[position2];
@@ -57,23 +84,30 @@ const MiniForm = ({ mode }) => {
     setMini({ ...mini, images: imagesClone });
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
+    if (!mini) {
+      return;
+    }
     const imagesClone = mini.images;
     const removedImages = imagesClone.splice(index, 1);
 
     const newMiniObject = { ...mini, images: imagesClone };
-    if (removedImages[0]?._id === mini.thumbnail._id) {
+    if (removedImages[0]?._id === mini?.thumbnail?._id) {
       newMiniObject.thumbnail = imagesClone[0];
     }
 
     setMini(newMiniObject);
   };
 
-  const handleSetThumbnail = (id) => {
-    setMini((prevMini) => ({ ...prevMini, thumbnail: id }));
+  const handleSetThumbnail = (image: Image) => {
+    setMini((prevMini) =>
+      prevMini ? { ...prevMini, thumbnail: image } : undefined,
+    );
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
+    if (!mini) return;
+
     let miniData;
     e.preventDefault();
     if (mode === "edit") {
@@ -97,37 +131,55 @@ const MiniForm = ({ mode }) => {
     }
   };
 
-  const addImages = async (newImages) => {
+  const addImages = async (newImages: Image[]) => {
+    if (!mini) {
+      return;
+    }
+
     let images = mini.images;
     images = [...images, ...newImages];
-    setMini((prevMini) => ({
-      ...prevMini,
-      images,
-      thumbnail: prevMini.thumbnail || images[0],
-    }));
+    setMini((prevMini) =>
+      prevMini
+        ? {
+            ...prevMini,
+            images,
+            thumbnail: prevMini.thumbnail || images[0],
+          }
+        : undefined,
+    );
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setMini((prevMini) => ({ ...prevMini, name: e.target.value }));
+    setMini((prevMini) =>
+      prevMini ? { ...prevMini, name: e.target.value } : undefined,
+    );
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
-    setMini((prevMini) => ({ ...prevMini, description: e.target.value }));
+    setMini((prevMini) =>
+      prevMini ? { ...prevMini, description: e.target.value } : undefined,
+    );
   };
 
   const handleBlur = () => {
-    setMini((prevMini) => ({ ...prevMini, blur: !prevMini.blur }));
+    setMini((prevMini) =>
+      prevMini ? { ...prevMini, blur: !prevMini.blur } : undefined,
+    );
   };
 
-  const chooseFigure = (figure) => {
+  const chooseFigure = (figure: Figure | undefined) => {
     setSelectedFigure(figure);
     setFigureSearch(figure?.name || "");
     setFigureDropdownOpen(false);
   };
 
-  const handleFigureSearchChange = async (e) => {
+  const handleFigureSearchChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setFigureSearch(e.target.value);
     const results = await getFiguresBySearch(e.target.value, {
@@ -139,13 +191,25 @@ const MiniForm = ({ mode }) => {
     setFigureResults(figures);
   };
 
-  const handleFigureSearchBlur = (e) => {
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  const handleFigureSearchBlur = (
+    e: React.FocusEvent | React.KeyboardEvent,
+  ) => {
+    if (
+      !("relatedTarget" in e) ||
+      !e.relatedTarget ||
+      !e.currentTarget.contains(e.relatedTarget)
+    ) {
       setFigureDropdownOpen(false);
     }
   };
 
   const handleImageSave = async () => {
+    if (!mini) {
+      return;
+    }
+    if (!imageObj) {
+      return;
+    }
     const imagesClone = [...mini.images];
     imagesClone[selectedImageIndex] = imageObj;
     setMini({ ...mini, images: imagesClone });
@@ -161,7 +225,7 @@ const MiniForm = ({ mode }) => {
     setShowTextFieldModal(false);
   };
 
-  const handleImageEdit = (index) => {
+  const handleImageEdit = (index: number) => {
     setSelectedImageIndex(index);
     setImageObj(mini?.images[index]);
 
@@ -216,12 +280,14 @@ const MiniForm = ({ mode }) => {
                 </div>
               )}
 
-              <AutoCompleteInput
+              <AutoCompleteInput<Figure>
                 chooseItem={chooseFigure}
                 dropdownOpen={figureDropdownOpen}
                 setDropdownOpen={setFigureDropdownOpen}
                 onChange={handleFigureSearchChange}
-                onFocus={handleFigureSearchChange}
+                onFocus={(e: React.FocusEvent<HTMLInputElement>) =>
+                  handleFigureSearchChange(e)
+                }
                 value={figureSearch}
                 items={figureResults}
                 onBlur={handleFigureSearchBlur}

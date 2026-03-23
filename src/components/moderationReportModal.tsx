@@ -10,12 +10,13 @@ import {
 import { useState } from "react";
 import { FaFlag } from "react-icons/fa6";
 import moderationReportReasons from "../constants/moderationReportReasons";
+import { ModerationReason } from "../types/moderationReport.types";
 
-function ModerationReportModal({ show, onClose, onConfirm }) {
-  const [reason, setReason] = useState(moderationReportReasons[0].name);
+function ModerationReportModal({ show, onClose, onConfirm }: { show: boolean; onClose: () => void; onConfirm: (data: { reason: ModerationReason; description: string }) => void }) {
+  const [reason, setReason] = useState<ModerationReason>(moderationReportReasons[0].name);
   const [description, setDescription] = useState("");
 
-  const onSubmit = async (e) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onConfirm({ reason, description });
     setReason(moderationReportReasons[0].name);
@@ -23,8 +24,8 @@ function ModerationReportModal({ show, onClose, onConfirm }) {
     onClose();
   };
 
-  const onReasonChange = (e) => {
-    setReason(e.target.value);
+  const onReasonChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setReason(e.target.value as ModerationReason);
   };
 
   const clearModalAndClose = () => {
@@ -77,7 +78,7 @@ function ModerationReportModal({ show, onClose, onConfirm }) {
             <Button type="submit" color="red">
               <FaFlag className="mr-2 h-5 w-5" /> Report
             </Button>
-            <Button onClick={clearModalAndClose}>Cancel</Button>
+            <Button color="gray" onClick={clearModalAndClose}>Cancel</Button>
           </div>
         </form>
       </ModalBody>
