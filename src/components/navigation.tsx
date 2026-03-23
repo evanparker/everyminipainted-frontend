@@ -13,17 +13,25 @@ import {
 } from "flowbite-react";
 import { useContext } from "react";
 import { FaUser } from "react-icons/fa6";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import UserContext from "../userContext";
 import S3Image from "./images/s3Image";
 
 function Navigation() {
   const { user, logout } = useContext(UserContext);
+  const navigate = useNavigate();
   return (
     <Navbar fluid rounded className="shadow bg-primary-200">
       <NavbarToggle />
 
-      <NavbarBrand href={"/"}>
+      <NavbarBrand
+        onClick={(e) => {
+          e.preventDefault();
+          navigate("/");
+        }}
+        href={"/"}
+        className="cursor-pointer"
+      >
         <img src="/emplogo.png" className="mr-3 h-9" alt="EMP Logo" />
         <span className="hidden sm:block self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           Every Mini Painted

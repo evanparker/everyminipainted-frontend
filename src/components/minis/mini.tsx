@@ -25,7 +25,7 @@ import { ModerationReason } from "../../types/moderationReport.types";
 
 const Mini = () => {
   const navigate = useNavigate();
-  const [mini, setMini] = useState<Mini | null>(null);
+  const [mini, setMini] = useState<Mini | undefined>(undefined);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showModerationReportModal, setShowModerationReportModal] =
     useState(false);
@@ -38,7 +38,7 @@ const Mini = () => {
       try {
         const miniData = await getMini(id);
         setMini(miniData);
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (e: any) {
         if (e && e.status === 404) {
           navigate("/404", { replace: true });
@@ -64,28 +64,31 @@ const Mini = () => {
     }
   };
 
-  const handleModerationReport = async (data: { reason: ModerationReason; description: string }) => {
-    if (mini) {
-      postModerationReport({ mini: mini, ...data });
-    }
+  const handleModerationReport = async (data: {
+    reason: ModerationReason;
+    description: string;
+  }) => {
+    if (!mini) return;
+    postModerationReport({ mini: mini, ...data });
     toast(ModerationReportToast, {});
   };
 
   const favorite = async () => {
+    if (!mini) return;
     try {
       if (favorited) {
         const updatedUser = await removeFavorite(id);
         setFavorited(false);
         setUser({ ...user, favorites: updatedUser.favorites });
         if (mini) {
-          setMini({ ...mini, favorites: mini?.favorites - 1 });
+          setMini({ ...mini, favorites: mini.favorites - 1 });
         }
       } else {
         const updatedUser = await addFavorite(id);
         setFavorited(true);
         setUser({ ...user, favorites: updatedUser.favorites });
         if (mini) {
-          setMini({ ...mini, favorites: mini?.favorites + 1 });
+          setMini({ ...mini, favorites: mini.favorites + 1 });
         }
       }
     } catch (e) {

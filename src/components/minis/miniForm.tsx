@@ -106,9 +106,7 @@ const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
   };
 
   const handleSubmit = async (e: FormEvent) => {
-    if (!mini) {
-      return;
-    }
+    if (!mini) return;
 
     let miniData;
     e.preventDefault();
