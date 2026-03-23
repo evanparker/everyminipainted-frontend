@@ -12,10 +12,6 @@ npm run dev
 
 - [x] Add favicon
 - [x] "Post this mini link" on figure pages
-- [ ] Admin Pages
-  - [ ] Users
-  - [ ] Minis
-  - [ ] Figures/Manufactuers/Collections
 - [ ] Automated front-end testing
 - [ ] Typescript.
 - [ ] Improve the image modal experience

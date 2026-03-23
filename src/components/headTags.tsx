@@ -7,7 +7,7 @@ function HeadTags({
   thumbnail,
 }: {
   name: string;
-  description?: string;
+  description: string;
   thumbnail?: Image;
 }) {
   let thumbnailImageURL = "";
