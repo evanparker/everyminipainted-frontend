@@ -12,7 +12,7 @@ const ForgotPasswordForm = () => {
 
   useEffect(() => {}, []);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setErrorText("");
     try {
@@ -26,7 +26,10 @@ const ForgotPasswordForm = () => {
         navigate(`/login`);
       }
     } catch (error) {
-      setErrorText(error?.response?.message);
+      setErrorText(
+        (error as { response?: { message?: string } }).response?.message ||
+          "An error occurred.",
+      );
       console.error(error);
     }
   };
