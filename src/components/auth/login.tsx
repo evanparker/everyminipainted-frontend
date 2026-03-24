@@ -7,15 +7,15 @@ import UserContext from "../../userContext";
 import LogoutToast from "../toasts/logoutToast";
 
 const Login = () => {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [errorText, setErrorText] = useState();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [errorText, setErrorText] = useState("");
   const navigate = useNavigate();
   const { login } = useContext(UserContext);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setErrorText();
+    setErrorText("");
     try {
       const userData = await postLogin({
         email,
@@ -29,7 +29,7 @@ const Login = () => {
       });
       navigate("/");
     } catch (error) {
-      if (error.status === 401) {
+      if ((error as { status: number }).status === 401) {
         setErrorText("Invalid username or password.");
       }
     }

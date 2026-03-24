@@ -15,7 +15,11 @@ function PageFooter() {
       <div className="w-full text-center">
         <div className="w-full justify-between sm:flex sm:items-center sm:justify-between">
           <FooterBrand
-            onClick={() => navigate("/")}
+            href="/"
+            onClick={(e) => {
+              e.preventDefault();
+              navigate("/");
+            }}
             src="/emplogo.png"
             alt="Every Mini Painted Logo"
             name="Every Mini Painted"

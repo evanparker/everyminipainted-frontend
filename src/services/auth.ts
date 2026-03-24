@@ -9,9 +9,10 @@ async function postLogin(loginInfo: {
 }
 
 async function postSignup(signupInfo: {
+  username: string;
   email: string;
   password: string;
-  inviteCode?: string;
+  invite?: string;
 }) {
   const response = await apiClient.post(`/auth/signup`, signupInfo);
   return response;
@@ -22,7 +23,7 @@ async function postLogout() {
   return response;
 }
 
-async function putPassword(passwordInfo: { currentPassword: string; newPassword: string }) {
+async function putPassword(passwordInfo: { password: string }) {
   const response = await apiClient.put(`/auth/password`, passwordInfo);
   return response;
 }
@@ -32,7 +33,7 @@ async function postForgotPassword(emailInfo: { email: string }) {
   return response;
 }
 
-async function postResetPassword(info: { email: string; token: string; newPassword: string }) {
+async function postResetPassword(info: { userId: string; token: string; password: string }) {
   const response = await apiClient.post(`/auth/resetpassword`, info);
   return response;
 }

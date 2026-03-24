@@ -16,13 +16,13 @@ const Signup = () => {
       ? toBool(import.meta.env.VITE_CREATE_USER_REQUIRES_INVITE)
       : true;
 
-  const handleUsername = (e) => {
+  const handleUsername = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value.toLowerCase();
     const re = /[a-z0-9\-_]+/g;
     setUsername((text.match(re) || []).join(""));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setFormError("");
     try {
@@ -36,7 +36,10 @@ const Signup = () => {
         navigate("/login");
       }
     } catch (err) {
-      setFormError(err.response?.message);
+      setFormError(
+        (err as { response?: { message?: string } }).response?.message ||
+          "An error occurred.",
+      );
     }
   };
 
