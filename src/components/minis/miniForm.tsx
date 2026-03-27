@@ -236,14 +236,15 @@ const MiniForm = ({ mode }: { mode: "new" | "edit" }) => {
     <>
       {mini && token && (userId === mini?.userId?._id || mode === "new") && (
         <div>
-          <ImageTextFieldModal
-            imageObj={imageObj}
-            show={showTextFieldModal}
-            onClose={() => setShowTextFieldModal(false)}
-            onConfirm={handleImageSave}
-            setImageObj={setImageObj}
-          />
-
+          {imageObj && (
+            <ImageTextFieldModal
+              imageObj={imageObj}
+              show={showTextFieldModal}
+              onClose={() => setShowTextFieldModal(false)}
+              onConfirm={handleImageSave}
+              setImageObj={setImageObj}
+            />
+          )}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">
               <Label htmlFor="name1">Name</Label>

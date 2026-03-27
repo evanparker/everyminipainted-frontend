@@ -1,4 +1,4 @@
-import { Image } from "../../types/image.types";
+import { ImageS3 } from "../../types/image.types";
 import getS3Url from "./getS3Url";
 
 const S3Image = ({
@@ -9,12 +9,12 @@ const S3Image = ({
   className = "",
   onLoad,
 }: {
-  image: Image;
+  image: ImageS3;
   width?: number;
   height?: number;
   blur?: boolean;
   className?: string;
-  onLoad?: () => void;
+  onLoad?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
 }) => {
   const options = ["quality:80", "extend:1"];
 

@@ -8,6 +8,7 @@ import {
 } from "flowbite-react";
 import { FaFloppyDisk } from "react-icons/fa6";
 import S3Image from "./s3Image";
+import type { Image, ImageS3 } from "../../types/image.types";
 
 function ImageTextFieldModal({
   imageObj,
@@ -15,6 +16,12 @@ function ImageTextFieldModal({
   show,
   onClose,
   onConfirm,
+}: {
+  imageObj: Image;
+  setImageObj: (obj: Image) => void;
+  show: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
 }) {
   return (
     <Modal dismissible show={show} onClose={onClose} size="xl" className="">
@@ -22,7 +29,7 @@ function ImageTextFieldModal({
       <ModalBody className="flex gap-5">
         <div className="w-40 h-40">
           {imageObj?.type === "s3Image" ? (
-            <S3Image image={imageObj} width={400} height={400} />
+            <S3Image image={imageObj as ImageS3} width={400} height={400} />
           ) : (
             <div></div>
           )}

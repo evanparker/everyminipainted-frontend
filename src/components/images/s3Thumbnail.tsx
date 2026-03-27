@@ -1,3 +1,4 @@
+import { ImageS3 } from "../../types/image.types";
 import S3Image from "./s3Image";
 
 const S3Thumbnail = ({
@@ -6,6 +7,14 @@ const S3Thumbnail = ({
   height,
   blur = false,
   className = "",
+  onLoad,
+}: {
+  image: ImageS3;
+  width?: number;
+  height?: number;
+  blur?: boolean;
+  className?: string;
+  onLoad?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
 }) => {
   className += " absolute top-0";
   return (
@@ -16,6 +25,7 @@ const S3Thumbnail = ({
         height={height}
         blur={blur}
         className={className}
+        onLoad={onLoad}
       />
     </div>
   );

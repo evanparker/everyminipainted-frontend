@@ -1,10 +1,18 @@
 import { Modal, ModalBody } from "flowbite-react";
-import PropTypes from "prop-types";
 import S3Image from "./s3Image";
 import { useCallback, useRef, useState } from "react";
 import { FaX } from "react-icons/fa6";
+import { ImageS3 } from "../../types/image.types";
 
-function ImageModal({ image, onClose, show }) {
+function ImageModal({
+  image,
+  onClose,
+  show,
+}: {
+  image: ImageS3;
+  onClose: () => void;
+  show: boolean;
+}) {
   const [containerZoom, setContainerZoom] = useState(false);
   const [altTextVisible, setAltTextVisible] = useState(false);
   const [imageDimensions, setImageDimensions] = useState({
@@ -22,12 +30,12 @@ function ImageModal({ image, onClose, show }) {
     onClose();
   }, [onClose]);
 
-  const onImageLoad = useCallback(async (e) => {
+  const onImageLoad = async (e: React.SyntheticEvent<HTMLImageElement>) => {
     await setContainerZoom(false);
 
-    const { naturalWidth, naturalHeight } = e.target;
+    const { naturalWidth, naturalHeight } = e.target as HTMLImageElement;
     await setImageDimensions({ width: naturalWidth, height: naturalHeight });
-  }, []);
+  };
 
   return (
     <Modal
@@ -62,12 +70,7 @@ function ImageModal({ image, onClose, show }) {
             }}
           >
             {image?.type === "s3Image" ? (
-              <S3Image
-                image={image}
-                width={1600}
-                altText={image?.altText}
-                onLoad={onImageLoad}
-              />
+              <S3Image image={image} width={1600} onLoad={onImageLoad} />
             ) : (
               <></>
             )}
@@ -108,11 +111,5 @@ function ImageModal({ image, onClose, show }) {
     </Modal>
   );
 }
-
-ImageModal.propTypes = {
-  image: PropTypes.object,
-  onClose: PropTypes.func,
-  show: PropTypes.bool,
-};
 
 export default ImageModal;

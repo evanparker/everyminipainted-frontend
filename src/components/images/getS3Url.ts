@@ -4,6 +4,12 @@ const getS3Url = ({
   key,
   bucket,
   extension = "jpg",
+}: {
+  signature?: string;
+  options?: string;
+  key: string;
+  bucket: string;
+  extension?: string;
 }) => {
   const s3address = `s3://${bucket}/${key}`;
   const url = `${

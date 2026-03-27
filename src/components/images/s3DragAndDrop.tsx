@@ -1,12 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import { FileInput, Label } from "flowbite-react";
 import { postImage } from "../../services/image";
+import { ImageS3 } from "../../types/image.types";
 
-const S3DragAndDrop = ({ addImages }) => {
+const S3DragAndDrop = ({
+  addImages,
+}: {
+  addImages: (images: ImageS3[]) => void;
+}) => {
   const [dragOver, setDragOver] = useState(false);
   const abortControllerRef = useRef(new AbortController());
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setDragOver(true);
   };
@@ -15,11 +20,17 @@ const S3DragAndDrop = ({ addImages }) => {
     setDragOver(false);
   };
 
-  const handleDrop = async (e) => {
+  const handleDrop = async (
+    e: React.DragEvent<HTMLLabelElement> | React.ChangeEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setDragOver(false);
 
-    const files = Array.from(e.target?.files || e.dataTransfer.files);
+    const files =
+      "dataTransfer" in e
+        ? Array.from(e.dataTransfer.files)
+        : Array.from(e.target?.files || []);
+
     const images = [];
 
     abortControllerRef.current.abort();
@@ -29,11 +40,11 @@ const S3DragAndDrop = ({ addImages }) => {
         try {
           const image = await postImage(
             file,
-            abortControllerRef.current.signal
+            abortControllerRef.current.signal,
           );
           images.push(image);
         } catch (error) {
-          if (error.name !== "AbortError") {
+          if ((error as { name: string }).name !== "AbortError") {
             console.error(error);
           }
         }
