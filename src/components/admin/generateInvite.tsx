@@ -17,7 +17,9 @@ import UserContext from "../../userContext";
 
 const GenerateInvite = () => {
   const { user } = useContext(UserContext);
-  const [invites, setInvites] = useState([]);
+  const [invites, setInvites] = useState<{ code: string; createdAt: Date }[]>(
+    [],
+  );
   const [inviteCode, setInviteCode] = useState("");
   const navigate = useNavigate();
   const [formError, setFormError] = useState("");
@@ -28,7 +30,11 @@ const GenerateInvite = () => {
     }
     const fetchData = async () => {
       const results = await getInvites();
-      results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      results.sort(
+        (a: { createdAt: Date }, b: { createdAt: Date }) =>
+          parseInt(new Date(b.createdAt).getTime().toString()) -
+          parseInt(new Date(a.createdAt).getTime().toString()),
+      );
       setInvites(results);
     };
     if (user?.roles?.includes("admin")) {
@@ -36,12 +42,12 @@ const GenerateInvite = () => {
     }
   }, [user, navigate]);
 
-  const handleInviteCodeChange = (e) => {
+  const handleInviteCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     setInviteCode(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     try {
@@ -52,7 +58,10 @@ const GenerateInvite = () => {
         setInvites((prevInvites) => [invite, ...prevInvites]);
       }
     } catch (error) {
-      setFormError(error.response?.message);
+      setFormError(
+        (error as { response?: { message?: string } }).response?.message ||
+          "An error occurred.",
+      );
     }
   };
 

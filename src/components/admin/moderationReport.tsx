@@ -8,9 +8,12 @@ import UserContext from "../../userContext";
 import DisplayMini from "../minis/displayMini";
 import { Button, HR } from "flowbite-react";
 import { deleteMini, putMini } from "../../services/mini";
+import type { ModerationReport } from "../../types/moderationReport.types";
 
 const ModerationReport = () => {
-  const [moderationReport, setModerationReport] = useState([]);
+  const [moderationReport, setModerationReport] = useState<
+    Partial<ModerationReport> | undefined
+  >(undefined);
   const navigate = useNavigate();
   const { user } = useContext(UserContext);
   const { id } = useParams();

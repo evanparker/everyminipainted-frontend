@@ -5,7 +5,7 @@ async function getInvites() {
   return response;
 }
 
-async function postInvite(invite: { email: string }) {
+async function postInvite(invite: { code: string }) {
   const response = await apiClient.post(`/invites/`, invite);
   return response;
 }

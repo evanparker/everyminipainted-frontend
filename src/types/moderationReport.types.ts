@@ -1,4 +1,5 @@
 import { Mini } from "./mini.types";
+import { User } from "./user.types";
 
 export enum ModerationReason {
   NSFW = "NSFW",
@@ -13,8 +14,8 @@ export enum ModerationReason {
 
 export interface ModerationReport {
   _id?: string;
-  userId?: string;
-  mini: Mini | string;
+  userId?: User;
+  mini: Mini;
   description?: string;
   reason: ModerationReason;
   status?: "open" | "accepted" | "rejected";

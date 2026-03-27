@@ -12,11 +12,15 @@ import {
   TableRow,
 } from "flowbite-react";
 import { FaFlag } from "react-icons/fa6";
+import { ModerationReport } from "../../types/moderationReport.types";
+import { User } from "../../types/user.types";
 
 const AdminPanelUser = () => {
   const { user: self } = useContext(UserContext);
-  const [user, setUser] = useState();
-  const [moderationReports, setModerationReports] = useState([]);
+  const [user, setUser] = useState<User | undefined>(undefined);
+  const [moderationReports, setModerationReports] = useState<
+    ModerationReport[]
+  >([]);
   const { username } = useParams();
   const navigate = useNavigate();
 
@@ -35,7 +39,7 @@ const AdminPanelUser = () => {
   useEffect(() => {
     const fetchModerationReports = async () => {
       const reports = await getModerationReportsOnUserId({
-        userId: user._id,
+        userId: user?._id,
       });
       setModerationReports(reports);
     };

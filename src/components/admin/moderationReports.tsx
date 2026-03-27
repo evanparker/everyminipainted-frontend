@@ -14,12 +14,15 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { itemsPerPage } from "../../constants/requestDefaults";
 import { getModerationReports } from "../../services/moderationReport";
 import UserContext from "../../userContext";
+import { ModerationReport } from "../../types/moderationReport.types";
 
 const ModerationReports = () => {
-  const [moderationReports, setModerationReports] = useState([]);
+  const [moderationReports, setModerationReports] = useState<
+    ModerationReport[]
+  >([]);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
   const [filter, setFilter] = useState("open");
@@ -45,9 +48,9 @@ const ModerationReports = () => {
     }
   }, [user, navigate, currentPage, filter]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    const searchParams = { page };
+    const searchParams = { page: page.toString() };
     setSearchParams(searchParams, { replace: false });
   };
 

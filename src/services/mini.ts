@@ -21,7 +21,7 @@ async function postMini(mini: Mini) {
   return response;
 }
 
-async function putMini(id: string | undefined, mini: Mini) {
+async function putMini(id: string | undefined, mini: Partial<Mini>) {
   if (!id) {
     return null;
   }

@@ -18,7 +18,7 @@ async function getUserByMe() {
   return response;
 }
 
-async function getUserByUsername(username: string) {
+async function getUserByUsername(username?: string) {
   const response = await apiClient.get(`/users/${username}`);
   return response;
 }

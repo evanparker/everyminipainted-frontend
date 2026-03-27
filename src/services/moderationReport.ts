@@ -27,14 +27,14 @@ async function getModerationReportsByUserId({
   return response;
 }
 
-async function getModerationReportsOnUserId({ userId }: { userId: string }) {
+async function getModerationReportsOnUserId({ userId }: { userId?: string }) {
   const response = await apiClient.get(
     `/moderation-reports/?reportedUser=${userId}`
   );
   return response;
 }
 
-async function getModerationReport(id: string) {
+async function getModerationReport(id?: string) {
   const response = await apiClient.get(`/moderation-reports/${id}`);
   return response;
 }
@@ -47,7 +47,7 @@ async function postModerationReport(moderationReport: ModerationReport) {
   return response;
 }
 
-async function putModerationReport(id: string, moderationReport: ModerationReport) {
+async function putModerationReport(id: string | undefined, moderationReport: Partial<ModerationReport>) {
   const response = await apiClient.put(
     `/moderation-reports/${id}`,
     moderationReport
