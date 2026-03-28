@@ -4,15 +4,20 @@ import { useState } from "react";
 import AutoCompleteInput from "../autoCompleteInput";
 import { getManufacturersBySearch } from "../../services/manufacturer";
 import { useNavigate } from "react-router-dom";
+import { Manufacturer } from "../../types/manufacturer.types";
 
-const FigureSearchForm = ({ className }) => {
+const FigureSearchForm = ({ className }: { className?: string }) => {
   const navigate = useNavigate();
   const [expand, setExpand] = useState(false);
   const [manufacturerSearch, setManufacturerSearch] = useState("");
   const [manufacturerDropdownOpen, setManufacturerDropdownOpen] =
     useState(false);
-  const [manufacturerResults, setManufacturerResults] = useState([]);
-  const [selectedManufacturer, setSelectedManufacturer] = useState();
+  const [manufacturerResults, setManufacturerResults] = useState<
+    Manufacturer[]
+  >([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState<
+    Manufacturer | undefined
+  >();
   const [search, setSearch] = useState("");
 
   const toggleExpand = () => {
@@ -20,34 +25,40 @@ const FigureSearchForm = ({ className }) => {
     setSelectedManufacturer(undefined);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (
+    e: React.FormEvent<HTMLFormElement> | React.KeyboardEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setManufacturerDropdownOpen(false);
     navigate(
       "/figures" +
         `?search=${search}${
-          selectedManufacturer ? `&manufacturer=${selectedManufacturer.id}` : ""
-        }`
+          selectedManufacturer
+            ? `&manufacturer=${selectedManufacturer._id}`
+            : ""
+        }`,
     );
   };
 
-  const handleSearchChange = (e) => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };
 
-  const handleSearchKeydown = (e) => {
+  const handleSearchKeydown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       handleSubmit(e);
     }
   };
 
-  const chooseManufacturer = (manufacturer) => {
+  const chooseManufacturer = (manufacturer: Manufacturer | undefined) => {
     setSelectedManufacturer(manufacturer);
     setManufacturerSearch(manufacturer?.name || "");
     setManufacturerDropdownOpen(false);
   };
 
-  const handleManufacturerSearchChange = async (e) => {
+  const handleManufacturerSearchChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setManufacturerSearch(e.target.value);
     const manufacturers = await getManufacturersBySearch(e.target.value, {
@@ -58,8 +69,14 @@ const FigureSearchForm = ({ className }) => {
     setManufacturerResults(manufacturers.docs);
   };
 
-  const handleManufacturerSearchBlur = (e) => {
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  const handleManufacturerSearchBlur = (
+    e: React.FocusEvent | React.KeyboardEvent,
+  ) => {
+    if (
+      !("relatedTarget" in e) ||
+      !e.relatedTarget ||
+      !e.currentTarget.contains(e.relatedTarget)
+    ) {
       setManufacturerDropdownOpen(false);
     }
   };

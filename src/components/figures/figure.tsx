@@ -18,19 +18,21 @@ import DisplayFigure from "./displayFigure";
 import DisplayCollections from "../collections/displayCollections";
 import { getCollectionsByFigure } from "../../services/collection";
 import toBool from "../../util/toBool";
+import type { Figure } from "../../types/figure.types";
+import { Mini } from "../../types/mini.types";
 
 const Figure = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const [figure, setFigure] = useState();
-  const [minis, setMinis] = useState();
+  const [figure, setFigure] = useState<Figure | undefined>();
+  const [minis, setMinis] = useState<Mini[] | undefined>();
   const [collections, setCollections] = useState([]);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [canEdit, setCanEdit] = useState(false);
   const { id } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1),
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
   const [currentCollectionsPage, setCurrentCollectionsPages] = useState(1);
@@ -52,8 +54,7 @@ const Figure = () => {
         const figureData = await getFigure(id);
         setFigure(figureData);
       } catch (e) {
-        console.log(e);
-        if (e.status === 404) {
+        if ((e as { status: number }).status === 404) {
           navigate("/404", { replace: true });
         }
       }
@@ -89,25 +90,25 @@ const Figure = () => {
   }, [currentPage, id]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
   const handleDeleteFigure = async () => {
     const deletedFigure = await deleteFigure(id);
     if (deletedFigure) {
       toast(DeleteToast, {
-        data: { message: `${figure.name} Deleted` },
+        data: { message: `${figure && figure?.name} Deleted` },
       });
 
       navigate("/figures");
     }
   };
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    setSearchParams({ page }, { replace: false });
+    setSearchParams({ page: page.toString() }, { replace: false });
   };
-  const onCollectionsPageChange = (page) => {
+  const onCollectionsPageChange = (page: number) => {
     setCurrentCollectionsPages(page);
   };
 
@@ -159,7 +160,7 @@ const Figure = () => {
       <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">
         Minis
       </h3>
-      {!(minis?.length > 0) && (
+      {!(minis && minis.length > 0) && (
         <div className="text-sm text-gray-900 dark:text-gray-200">
           This figure has no painted minis yet...
         </div>
@@ -172,7 +173,7 @@ const Figure = () => {
         <FaCamera className="mr-2 h-5 w-5" />
         Post Your Own
       </Button>
-      {minis?.length > 0 && (
+      {minis && minis.length > 0 && (
         <>
           <div className="mt-5">
             <DisplayMinis minis={minis} />

@@ -1,19 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
 import ImageModal from "../images/innerImageZoomModal";
 import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
 import S3Thumbnail from "../images/s3Thumbnail";
+import { Figure } from "../../types/figure.types";
+import { Image, ImageS3 } from "../../types/image.types";
 
-const DisplayFigure = ({ figure }) => {
-  const [selectedImage, setSelectedImage] = useState();
+const DisplayFigure = ({ figure }: { figure: Figure }) => {
+  const [selectedImage, setSelectedImage] = useState<Image | undefined>();
 
   const onClose = () => {
     setSelectedImage(undefined);
   };
 
   const onArrowKeyDown = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (selectedImage) {
         const index = figure.images.indexOf(selectedImage);
 
@@ -43,11 +44,13 @@ const DisplayFigure = ({ figure }) => {
 
   return (
     <>
-      <ImageModal
-        onClose={onClose}
-        image={selectedImage}
-        show={!!selectedImage}
-      />
+      {selectedImage && (
+        <ImageModal
+          onClose={onClose}
+          image={selectedImage}
+          show={!!selectedImage}
+        />
+      )}
       <div>
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
           {figure?.name || "Untitled Figure"}
@@ -68,7 +71,11 @@ const DisplayFigure = ({ figure }) => {
                 aria-describedby={`figcaption-${idx}`}
               >
                 {img.type === "s3Image" ? (
-                  <S3Thumbnail image={img} width={400} height={400} />
+                  <S3Thumbnail
+                    image={img as ImageS3}
+                    width={400}
+                    height={400}
+                  />
                 ) : (
                   <div></div>
                 )}
@@ -132,10 +139,6 @@ const DisplayFigure = ({ figure }) => {
       </div>
     </>
   );
-};
-
-DisplayFigure.propTypes = {
-  figure: PropTypes.object,
 };
 
 export default DisplayFigure;

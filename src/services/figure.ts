@@ -20,29 +20,29 @@ async function getFiguresBySearch(
   return response;
 }
 
-async function getFigure(id: string) {
+async function getFigure(id: string | undefined) {
   const response = await apiClient.get(`/figures/${id}`);
   return response;
 }
 
-async function getFigureMinis(id: string, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getFigureMinis(id: string | undefined, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
   const response = await apiClient.get(
     `/figures/${id}/minis?limit=${limit}&offset=${offset}`
   );
   return response;
 }
 
-async function postFigure(figure: Figure) {
+async function postFigure(figure: Partial<Figure>) {
   const response = await apiClient.post(`/figures/`, figure);
   return response;
 }
 
-async function putFigure(id: string, figure: Figure) {
+async function putFigure(id: string | undefined, figure: Partial<Figure>) {
   const response = await apiClient.put(`/figures/${id}`, figure);
   return response;
 }
 
-async function deleteFigure(id: string) {
+async function deleteFigure(id: string | undefined) {
   const response = await apiClient.delete(`/figures/${id}`);
   return response;
 }

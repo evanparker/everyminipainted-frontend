@@ -12,26 +12,26 @@ import ImageSortContainer from "../images/imageSortContainer";
 import S3DragAndDrop from "../images/s3DragAndDrop";
 import ImageTextFieldModal from "../images/imageTextFieldModal";
 import SaveToast from "../toasts/saveToast";
+import { Image } from "../../types/image.types";
+import { Manufacturer } from "../../types/manufacturer.types";
+import type { Figure } from "../../types/figure.types";
 
-const FigureForm = ({ mode }) => {
+const FigureForm = ({ mode }: { mode: "new" | "edit" }) => {
   const { user } = useContext(UserContext);
-  const [figure, setFigure] = useState({
-    name: "",
-    partNumber: "",
-    website: "",
-    description: "",
-    artist: "",
-    images: [],
-  });
+  const [figure, setFigure] = useState<Figure | undefined>(undefined);
   const [canEdit, setCanEdit] = useState(false);
   const [manufacturerSearch, setManufacturerSearch] = useState("");
-  const [manufacturerResults, setManufacturerResults] = useState([]);
-  const [selectedManufacturer, setSelectedManufacturer] = useState();
+  const [manufacturerResults, setManufacturerResults] = useState<
+    Manufacturer[]
+  >([]);
+  const [selectedManufacturer, setSelectedManufacturer] = useState<
+    Manufacturer | undefined
+  >();
   const [manufacturerDropdownOpen, setManufacturerDropdownOpen] =
     useState(false);
   const [showTextFieldModal, setShowTextFieldModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [imageObj, setImageObj] = useState({});
+  const [imageObj, setImageObj] = useState<Image | undefined>();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -53,6 +53,15 @@ const FigureForm = ({ mode }) => {
 
     if (mode === "edit") {
       fetchFigureData();
+    } else {
+      setFigure({
+        name: "",
+        partNumber: "",
+        website: "",
+        description: "",
+        artist: "",
+        images: [],
+      });
     }
   }, [mode, id]);
 
@@ -66,29 +75,34 @@ const FigureForm = ({ mode }) => {
     }
   }, [user]);
 
-  const handleSort = (position1, position2) => {
-    const imagesClone = [...figure.images];
+  const handleSort = (position1: number, position2: number) => {
+    if (!figure) return;
+    const imagesClone = [...(figure.images || [])];
     const temp = imagesClone[position1];
     imagesClone[position1] = imagesClone[position2];
     imagesClone[position2] = temp;
     setFigure({ ...figure, images: imagesClone });
   };
 
-  const handleDelete = (index) => {
-    const imagesClone = figure.images;
+  const handleDelete = (index: number) => {
+    if (!figure) return;
+    const imagesClone = [...(figure.images || [])];
     const removedImages = imagesClone.splice(index, 1);
     const newFigureObject = { ...figure, images: imagesClone };
-    if (removedImages[0]?._id === figure.thumbnail._id) {
+    if (removedImages[0]?._id === figure.thumbnail?._id) {
       newFigureObject.thumbnail = imagesClone[0];
     }
     setFigure(newFigureObject);
   };
 
-  const handleSetThumbnail = (id) => {
-    setFigure((prevFigure) => ({ ...prevFigure, thumbnail: id }));
+  const handleSetThumbnail = (newThumbnail: Image) => {
+    setFigure((prevFigure) =>
+      prevFigure ? { ...prevFigure, thumbnail: newThumbnail } : undefined,
+    );
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!figure) return;
     let figureData;
     e.preventDefault();
     if (mode === "edit") {
@@ -112,48 +126,67 @@ const FigureForm = ({ mode }) => {
     }
   };
 
-  const addImages = async (newImages) => {
+  const addImages = async (newImages: Image[]) => {
+    if (!figure) return;
     let images = figure.images;
-    images = [...images, ...newImages];
-    setFigure((prevFigure) => ({
-      ...prevFigure,
-      images,
-      thumbnail: prevFigure.thumbnail || images[0],
-    }));
+    images = [...(images || []), ...newImages];
+    setFigure((prevFigure) =>
+      prevFigure
+        ? {
+            ...prevFigure,
+            images,
+            thumbnail: prevFigure.thumbnail || images[0],
+          }
+        : undefined,
+    );
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, name: e.target.value }));
+    setFigure((prevFigure) =>
+      prevFigure ? { ...prevFigure, name: e.target.value } : undefined,
+    );
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, description: e.target.value }));
+    setFigure((prevFigure) =>
+      prevFigure ? { ...prevFigure, description: e.target.value } : undefined,
+    );
   };
 
-  const handleWebsiteChange = (e) => {
+  const handleWebsiteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, website: e.target.value }));
+    setFigure((prevFigure) =>
+      prevFigure ? { ...prevFigure, website: e.target.value } : undefined,
+    );
   };
 
-  const handlePartNumberChange = (e) => {
+  const handlePartNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, partNumber: e.target.value }));
+    setFigure((prevFigure) =>
+      prevFigure ? { ...prevFigure, partNumber: e.target.value } : undefined,
+    );
   };
 
-  const handleArtistChange = (e) => {
+  const handleArtistChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setFigure((prevFigure) => ({ ...prevFigure, artist: e.target.value }));
+    setFigure((prevFigure) =>
+      prevFigure ? { ...prevFigure, artist: e.target.value } : undefined,
+    );
   };
 
-  const chooseManufacturer = (manufacturer) => {
+  const chooseManufacturer = (manufacturer: Manufacturer | undefined) => {
     setSelectedManufacturer(manufacturer);
     setManufacturerSearch(manufacturer?.name || "");
     setManufacturerDropdownOpen(false);
   };
 
-  const handleManufacturerSearchChange = async (e) => {
+  const handleManufacturerSearchChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setManufacturerSearch(e.target.value);
     const manufacturers = await getManufacturersBySearch(e.target.value, {
@@ -164,14 +197,21 @@ const FigureForm = ({ mode }) => {
     setManufacturerResults(manufacturers.docs);
   };
 
-  const handleManufacturerSearchBlur = (e) => {
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  const handleManufacturerSearchBlur = (
+    e: React.FocusEvent | React.KeyboardEvent,
+  ) => {
+    if (
+      !("relatedTarget" in e) ||
+      !e.relatedTarget ||
+      !e.currentTarget.contains(e.relatedTarget)
+    ) {
       setManufacturerDropdownOpen(false);
     }
   };
 
   const handleImageSave = async () => {
-    const imagesClone = [...figure.images];
+    if (!imageObj || !figure) return;
+    const imagesClone = [...(figure.images || [])];
     imagesClone[selectedImageIndex] = imageObj;
     setFigure({ ...figure, images: imagesClone });
     const imageResponse = await putImage(imageObj._id, imageObj);
@@ -186,9 +226,9 @@ const FigureForm = ({ mode }) => {
     setShowTextFieldModal(false);
   };
 
-  const handleImageEdit = (index) => {
+  const handleImageEdit = (index: number) => {
     setSelectedImageIndex(index);
-    setImageObj(figure?.images[index]);
+    setImageObj(figure?.images && figure?.images[index]);
 
     setShowTextFieldModal(true);
   };
@@ -197,13 +237,15 @@ const FigureForm = ({ mode }) => {
     <>
       {figure && canEdit && (
         <div>
-          <ImageTextFieldModal
-            imageObj={imageObj}
-            show={showTextFieldModal}
-            onClose={() => setShowTextFieldModal(false)}
-            onConfirm={handleImageSave}
-            setImageObj={setImageObj}
-          />
+          {imageObj && (
+            <ImageTextFieldModal
+              imageObj={imageObj}
+              show={showTextFieldModal}
+              onClose={() => setShowTextFieldModal(false)}
+              onConfirm={handleImageSave}
+              setImageObj={setImageObj}
+            />
+          )}
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">
               <Label htmlFor="name1">Name</Label>

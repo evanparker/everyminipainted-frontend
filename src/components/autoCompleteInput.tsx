@@ -2,7 +2,7 @@ import { FaMagnifyingGlass } from "react-icons/fa6";
 import { TextInput } from "flowbite-react";
 import { useRef, useState } from "react";
 
-function AutoCompleteInput<Type extends { _id: string; name: string }>({
+function AutoCompleteInput<Type extends { _id?: string; name?: string }>({
   chooseItem,
   dropdownOpen,
   setDropdownOpen,

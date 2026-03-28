@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
 import S3Thumbnail from "../images/s3Thumbnail";
 import { Mini } from "../../types/mini.types";
-import { Image } from "../../types/image.types";
+import { Image, ImageS3 } from "../../types/image.types";
 
 const DisplayMini = ({ mini }: { mini: Mini }) => {
   const [selectedImage, setSelectedImage] = useState<Image | undefined>();
@@ -71,7 +71,11 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
                 aria-describedby={`figcaption-${idx}`}
               >
                 {img.type === "s3Image" ? (
-                  <S3Thumbnail image={img} width={400} height={400} />
+                  <S3Thumbnail
+                    image={img as ImageS3}
+                    width={400}
+                    height={400}
+                  />
                 ) : (
                   <div></div>
                 )}

@@ -11,7 +11,7 @@ function ImageModal({
   onClose,
   show,
 }: {
-  image: Image;
+  image?: Image;
   onClose: () => void;
   show: boolean;
 }) {

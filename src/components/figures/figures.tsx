@@ -8,18 +8,19 @@ import UserContext from "../../userContext";
 import DisplayFigures from "./displayFigures";
 import toBool from "../../util/toBool";
 import FigureSearchForm from "./figureSearchForm";
+import type { Figure } from "../../types/figure.types";
 
 const Figures = () => {
   const { user } = useContext(UserContext);
-  const [figures, setFigures] = useState([]);
+  const [figures, setFigures] = useState<Figure[]>([]);
   const [canEdit, setCanEdit] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
   const searchString = searchParams.get("search") || "";
-  const manufacturer = searchParams.get("manufacturer");
+  const manufacturer = searchParams.get("manufacturer") || undefined;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -46,7 +47,7 @@ const Figures = () => {
   }, [searchString, currentPage, manufacturer]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
   useEffect(() => {
@@ -59,9 +60,13 @@ const Figures = () => {
     }
   }, [user]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    const searchParams = { page };
+    const searchParams: {
+      page?: string;
+      search?: string;
+      manufacturer?: string;
+    } = { page: page.toString() };
     if (searchString) {
       searchParams.search = searchString;
     }
