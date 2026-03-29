@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import UserContext from "../../userContext";
 import S3Thumbnail from "../images/s3Thumbnail";
 import { Mini } from "../../types/mini.types";
-import { Image } from "../../types/image.types";
+import { Image, ImageS3 } from "../../types/image.types";
 
 const DisplayMinis = ({ minis }: { minis: Mini[] }) => {
   const { user } = useContext(UserContext);
@@ -21,7 +21,7 @@ const DisplayMinis = ({ minis }: { minis: Mini[] }) => {
               renderImage={() =>
                 img?.type === "s3Image" ? (
                   <S3Thumbnail
-                    image={img}
+                    image={img as ImageS3}
                     width={400}
                     height={400}
                     blur={mini.blur}

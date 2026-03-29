@@ -79,14 +79,22 @@ const Mini = () => {
       if (favorited) {
         const updatedUser = await removeFavorite(id);
         setFavorited(false);
-        setUser({ ...user, favorites: updatedUser.favorites });
+        setUser((prevUser) =>
+          prevUser
+            ? { ...prevUser, favorites: updatedUser.favorites }
+            : undefined,
+        );
         if (mini) {
           setMini({ ...mini, favorites: mini.favorites - 1 });
         }
       } else {
         const updatedUser = await addFavorite(id);
         setFavorited(true);
-        setUser({ ...user, favorites: updatedUser.favorites });
+        setUser((prevUser) =>
+          prevUser
+            ? { ...prevUser, favorites: updatedUser.favorites }
+            : undefined,
+        );
         if (mini) {
           setMini({ ...mini, favorites: mini.favorites + 1 });
         }

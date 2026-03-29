@@ -1,12 +1,17 @@
+import { useState, useEffect, useCallback } from "react";
 import ImageModal from "../images/innerImageZoomModal";
-import { useCallback, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
+import { Link } from "react-router-dom";
+import SocialsBlock from "../socialsBlock";
 import S3Thumbnail from "../images/s3Thumbnail";
-import { Mini } from "../../types/mini.types";
+import { Manufacturer } from "../../types/manufacturer.types";
 import { Image, ImageS3 } from "../../types/image.types";
 
-const DisplayMini = ({ mini }: { mini: Mini }) => {
+const DisplayManufacturer = ({
+  manufacturer,
+}: {
+  manufacturer: Manufacturer;
+}) => {
   const [selectedImage, setSelectedImage] = useState<Image | undefined>();
 
   const onClose = () => {
@@ -16,15 +21,17 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
   const onArrowKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (selectedImage) {
-        const index = mini.images.indexOf(selectedImage);
+        const index = manufacturer.images.indexOf(selectedImage);
 
         if (e.key === "ArrowLeft") {
           e.preventDefault();
-          setSelectedImage(mini.images[Math.max(0, index - 1)]);
+          setSelectedImage(manufacturer.images[Math.max(0, index - 1)]);
         } else if (e.key === "ArrowRight") {
           e.preventDefault();
           setSelectedImage(
-            mini.images[Math.min(mini.images.length - 1, index + 1)],
+            manufacturer.images[
+              Math.min(manufacturer.images.length - 1, index + 1)
+            ],
           );
         } else if (e.key === "Escape") {
           e.preventDefault();
@@ -32,7 +39,7 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
         }
       }
     },
-    [selectedImage, mini.images],
+    [selectedImage, manufacturer.images],
   );
 
   useEffect(() => {
@@ -49,17 +56,15 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
         image={selectedImage}
         show={!!selectedImage}
       />
-      <div>
-        <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          {mini?.name || "Untitled Mini"}
+      <div className="flex flex-col gap-5">
+        <h1 className="text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          {manufacturer?.name || "Untitled Manufacturer"}
         </h1>
-        {mini?.description && (
-          <div className="format dark:format-invert my-5">
-            <Markdown>{mini?.description}</Markdown>
-          </div>
-        )}
+        <div className="format dark:format-invert">
+          <Markdown>{manufacturer?.description}</Markdown>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {mini?.images?.map((img, idx) => (
+          {manufacturer?.images?.map((img, idx) => (
             <button
               key={img._id}
               onClick={() => setSelectedImage(img)}
@@ -91,20 +96,24 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
             </button>
           ))}
         </div>
-        {mini?.figure && (
-          <Link
-            to={`/figures/${mini.figure._id}`}
-            className="block mt-5 p-3 cursor-pointer max-w-md rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white"
-          >
-            <div className="mb-1 text-xs text-gray-600 dark:text-gray-400">
-              Figure:
-            </div>
-            {mini.figure.name}
-          </Link>
+
+        {manufacturer?.website && (
+          <div className="max-w-md">
+            <Link to={manufacturer.website}>
+              <div className="p-3 cursor-pointer rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white">
+                <div className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  Website:
+                </div>
+                {manufacturer.website}
+              </div>
+            </Link>
+          </div>
         )}
+
+        <SocialsBlock socials={manufacturer?.socials || []} />
       </div>
     </>
   );
 };
 
-export default DisplayMini;
+export default DisplayManufacturer;

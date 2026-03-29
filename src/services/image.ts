@@ -1,7 +1,8 @@
 import { Image } from "../types/image.types";
 import { apiClient } from "./apiClient";
 
-async function getImage(id:string) {
+async function getImage(id: string | undefined) {
+  if (!id) return undefined;
   const response = await apiClient.get(`/images/${id}`);
   return response;
 }
@@ -19,7 +20,8 @@ async function postImage(imageFile: File, signal: AbortSignal) {
   return response;
 }
 
-async function putImage(id: string, image: Image) {
+async function putImage(id: string | undefined, image: Image) {
+  if (!id) return undefined;
   const response = await apiClient.put(`/images/${id}`, image);
   return response;
 }

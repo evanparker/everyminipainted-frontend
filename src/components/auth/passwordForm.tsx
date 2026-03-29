@@ -19,10 +19,10 @@ const PasswordForm = () => {
     if (userData) {
       toast(SaveToast, {
         data: {
-          message: `Password for ${user.username} updated.`,
+          message: `Password for ${user?.username} updated.`,
         },
       });
-      navigate(`/users/${user.username}`);
+      navigate(`/users/${user?.username}`);
     }
   };
 

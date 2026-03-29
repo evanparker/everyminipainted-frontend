@@ -1,12 +1,12 @@
+import { useState, useEffect, useCallback } from "react";
 import ImageModal from "../images/innerImageZoomModal";
-import { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
 import S3Thumbnail from "../images/s3Thumbnail";
-import { Mini } from "../../types/mini.types";
+import { Collection } from "../../types/collection.types";
 import { Image, ImageS3 } from "../../types/image.types";
 
-const DisplayMini = ({ mini }: { mini: Mini }) => {
+const DisplayCollection = ({ collection }: { collection: Collection }) => {
   const [selectedImage, setSelectedImage] = useState<Image | undefined>();
 
   const onClose = () => {
@@ -16,15 +16,17 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
   const onArrowKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (selectedImage) {
-        const index = mini.images.indexOf(selectedImage);
+        const index = collection.images.indexOf(selectedImage);
 
         if (e.key === "ArrowLeft") {
           e.preventDefault();
-          setSelectedImage(mini.images[Math.max(0, index - 1)]);
+          setSelectedImage(collection.images[Math.max(0, index - 1)]);
         } else if (e.key === "ArrowRight") {
           e.preventDefault();
           setSelectedImage(
-            mini.images[Math.min(mini.images.length - 1, index + 1)],
+            collection.images[
+              Math.min(collection.images.length - 1, index + 1)
+            ],
           );
         } else if (e.key === "Escape") {
           e.preventDefault();
@@ -32,7 +34,7 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
         }
       }
     },
-    [selectedImage, mini.images],
+    [selectedImage, collection.images],
   );
 
   useEffect(() => {
@@ -51,15 +53,13 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
       />
       <div>
         <h1 className="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          {mini?.name || "Untitled Mini"}
+          {collection?.name || "Untitled Collection"}
         </h1>
-        {mini?.description && (
-          <div className="format dark:format-invert my-5">
-            <Markdown>{mini?.description}</Markdown>
-          </div>
-        )}
+        <div className="format dark:format-invert">
+          <Markdown>{collection?.description}</Markdown>
+        </div>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          {mini?.images?.map((img, idx) => (
+          {collection?.images?.map((img, idx) => (
             <button
               key={img._id}
               onClick={() => setSelectedImage(img)}
@@ -91,20 +91,44 @@ const DisplayMini = ({ mini }: { mini: Mini }) => {
             </button>
           ))}
         </div>
-        {mini?.figure && (
-          <Link
-            to={`/figures/${mini.figure._id}`}
-            className="block mt-5 p-3 cursor-pointer max-w-md rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white"
-          >
-            <div className="mb-1 text-xs text-gray-600 dark:text-gray-400">
-              Figure:
+        {collection?.website && (
+          <div className="max-w-md">
+            <Link to={collection.website}>
+              <div className="mt-5 p-3 cursor-pointer rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white">
+                <div className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                  Website:
+                </div>
+                {collection.website}
+              </div>
+            </Link>
+          </div>
+        )}
+        {collection?.partNumber && (
+          <div className="max-w-md">
+            <div className="mt-5 p-3 rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white">
+              <div className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                Part Number:
+              </div>
+              {collection.partNumber}
             </div>
-            {mini.figure.name}
-          </Link>
+          </div>
+        )}
+        {collection?.manufacturer && (
+          <div className="max-w-md">
+            <Link
+              to={`/manufacturers/${collection.manufacturer._id}`}
+              className="block mt-5 p-3 cursor-pointer max-w-md rounded-lg border overflow-hidden border-gray-200 bg-white shadow-md dark:border-gray-700 dark:bg-gray-800 text-gray-900 dark:text-white"
+            >
+              <div className="mb-1 text-xs text-gray-600 dark:text-gray-400">
+                Manufacturer:
+              </div>
+              {collection.manufacturer.name}
+            </Link>
+          </div>
         )}
       </div>
     </>
   );
 };
 
-export default DisplayMini;
+export default DisplayCollection;

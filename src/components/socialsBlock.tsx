@@ -2,7 +2,13 @@ import { Link } from "react-router-dom";
 import Socials from "../constants/socials";
 import { Social } from "../types/social.types";
 
-const SocialsBlock = ({ socials, compact }: { socials: Social[]; compact: boolean }) => {
+const SocialsBlock = ({
+  socials,
+  compact = false,
+}: {
+  socials: Social[];
+  compact?: boolean;
+}) => {
   return (
     <>
       {socials?.length > 0 && !compact && (
@@ -12,11 +18,13 @@ const SocialsBlock = ({ socials, compact }: { socials: Social[]; compact: boolea
               Socials:
             </div>
             {socials.map((social, index) => {
-              const Icon = Socials[social.service as keyof typeof Socials]?.icon || (() => <></>);
+              const Icon =
+                Socials[social.service as keyof typeof Socials]?.icon ||
+                (() => <></>);
               return (
                 <Link
                   key={`social${index}`}
-                  to={social.link}
+                  to={social.link || "#"}
                   aria-label={`Link to ${social.service}`}
                 >
                   <div className="flex items-center gap-2 mb-1 text-gray-900 dark:text-white">
@@ -31,11 +39,13 @@ const SocialsBlock = ({ socials, compact }: { socials: Social[]; compact: boolea
       {socials?.length > 0 && compact && (
         <div className="flex gap-2">
           {socials.map((social, index) => {
-            const Icon = Socials[social.service as keyof typeof Socials]?.icon || (() => <></>);
+            const Icon =
+              Socials[social.service as keyof typeof Socials]?.icon ||
+              (() => <></>);
             return (
               <Link
                 key={`social${index}`}
-                to={social.link}
+                to={social.link || "#"}
                 aria-label={`Link to ${social.service}`}
               >
                 <div className="text-md text-gray-700 dark:text-gray-200 hover:text-black hover:dark:text-white">

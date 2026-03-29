@@ -16,6 +16,7 @@ import { FaUser } from "react-icons/fa6";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import UserContext from "../userContext";
 import S3Image from "./images/s3Image";
+import { ImageS3 } from "../types/image.types";
 
 function Navigation() {
   const { user, logout } = useContext(UserContext);
@@ -97,7 +98,7 @@ function Navigation() {
                     <div className="w-10 h-10 overflow-hidden rounded-full">
                       {user?.avatar.type === "s3Image" ? (
                         <S3Image
-                          image={user.avatar}
+                          image={user.avatar as ImageS3}
                           width={120}
                           height={120}
                           {...props}

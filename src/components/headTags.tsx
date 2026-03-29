@@ -1,4 +1,4 @@
-import { Image } from "../types/image.types";
+import { Image, ImageS3 } from "../types/image.types";
 import getS3Url from "./images/getS3Url";
 
 function HeadTags({
@@ -15,8 +15,8 @@ function HeadTags({
   if (thumbnail?.type === "s3Image") {
     thumbnailImageURL = getS3Url({
       options: ["width:400", "height:400", "quality:80", "extend:1"].join("/"),
-      key: thumbnail.s3Key,
-      bucket: thumbnail.s3Bucket,
+      key: (thumbnail as ImageS3).s3Key,
+      bucket: (thumbnail as ImageS3).s3Bucket,
       extension: "png",
     });
   }

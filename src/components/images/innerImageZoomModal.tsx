@@ -4,9 +4,17 @@ import getS3Url from "./getS3Url";
 import { useCallback, useState } from "react";
 import "react-inner-image-zoom/lib/styles.min.css";
 import { FaX } from "react-icons/fa6";
-import { Image } from "../../types/image.types";
+import { Image, ImageS3 } from "../../types/image.types";
 
-function ImageModal({ image, onClose, show }: { image: Image | undefined; onClose: () => void; show: boolean }) {
+function ImageModal({
+  image,
+  onClose,
+  show,
+}: {
+  image?: Image;
+  onClose: () => void;
+  show: boolean;
+}) {
   const [altTextVisible, setAltTextVisible] = useState(false);
   const [isZoomed, setIsZoomed] = useState(false);
 
@@ -14,18 +22,23 @@ function ImageModal({ image, onClose, show }: { image: Image | undefined; onClos
     onClose();
   }, [onClose]);
 
-  const url = getS3Url({
-    options: "width:1248",
-    key: image?.s3Key,
-    bucket: image?.s3Bucket,
-    extension: "png",
-  });
-  const zoomUrl = getS3Url({
-    options: "width:2048",
-    key: image?.s3Key,
-    bucket: image?.s3Bucket,
-    extension: "png",
-  });
+  let url = "";
+  let zoomUrl = "";
+
+  if (image?.type === "s3Image") {
+    url = getS3Url({
+      options: "width:1248",
+      key: (image as ImageS3).s3Key,
+      bucket: (image as ImageS3).s3Bucket,
+      extension: "png",
+    });
+    zoomUrl = getS3Url({
+      options: "width:2048",
+      key: (image as ImageS3).s3Key,
+      bucket: (image as ImageS3).s3Bucket,
+      extension: "png",
+    });
+  }
 
   return (
     <Modal
@@ -35,7 +48,7 @@ function ImageModal({ image, onClose, show }: { image: Image | undefined; onClos
       size="7xl"
       aria-label="Image Display Modal"
     >
-      <ModalBody className="grid justify-items-center" >
+      <ModalBody className="grid justify-items-center">
         <figure
           aria-describedby="modal-caption"
           aria-label="Image Modal"

@@ -1,9 +1,12 @@
 import { User } from "../types/user.types";
 import { apiClient } from "./apiClient";
 
-async function getMinisByUsername(username: string, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getMinisByUsername(
+  username: string | undefined,
+  { limit = 20, offset = 0 }: { limit?: number; offset?: number },
+) {
   const response = await apiClient.get(
-    `/users/${username}/minis?limit=${limit}&offset=${offset}`
+    `/users/${username}/minis?limit=${limit}&offset=${offset}`,
   );
   return response;
 }
@@ -18,7 +21,7 @@ async function getUserByMe() {
   return response;
 }
 
-async function getUserByUsername(username: string) {
+async function getUserByUsername(username?: string) {
   const response = await apiClient.get(`/users/${username}`);
   return response;
 }
