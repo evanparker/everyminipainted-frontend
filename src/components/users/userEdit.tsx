@@ -6,15 +6,15 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify/unstyled";
 import { postImage } from "../../services/image";
 import { putUser } from "../../services/user";
+import { ImageS3 } from "../../types/image.types";
+import { Social } from "../../types/social.types";
+import { User } from "../../types/user.types";
 import UserContext from "../../userContext";
 import getS3Url from "../images/getS3Url";
 import S3DragAndDrop from "../images/s3DragAndDrop";
 import SocialsForm from "../socialsForm";
 import SaveToast from "../toasts/saveToast";
 import UserAvatar from "./userAvatar";
-import { User } from "../../types/user.types";
-import { Social } from "../../types/social.types";
-import { ImageS3 } from "../../types/image.types";
 
 const UserEdit = () => {
   const { user: userFromContext, setUser: setUserFromContext } =

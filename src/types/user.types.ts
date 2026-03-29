@@ -12,7 +12,7 @@ export type User = {
   website?: string;
   description?: string;
   socials?: Social[];
-  favorites?: Mini[] | string[];
+  favorites: { [key: string]: Mini };
   createdAt: Date;
   violations: number;
 };
