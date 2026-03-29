@@ -7,41 +7,42 @@ import {
   FaTwitter,
   FaYoutube,
 } from "react-icons/fa6";
+import { Social, SocialService } from "../types/social.types";
 
-const Socials = {
+const Socials: { [key in SocialService]: Social } = {
   facebook: {
     name: "Facebook",
-    service: "facebook",
+    service: SocialService.Facebook,
     icon: FaFacebook,
   },
   bluesky: {
     name: "Bluesky",
-    service: "bluesky",
+    service: SocialService.Bluesky,
     icon: FaBluesky,
   },
   mastodon: {
     name: "Mastodon",
-    service: "mastodon",
+    service: SocialService.Mastodon,
     icon: FaMastodon,
   },
   instagram: {
     name: "Instagram",
-    service: "instagram",
+    service: SocialService.Instagram,
     icon: FaInstagram,
   },
   twitch: {
     name: "Twitch",
-    service: "twitch",
+    service: SocialService.Twitch,
     icon: FaTwitch,
   },
   youtube: {
     name: "YouTube",
-    service: "youtube",
+    service: SocialService.YouTube,
     icon: FaYoutube,
   },
   twitter: {
     name: "Twitter",
-    service: "twitter",
+    service: SocialService.Twitter,
     icon: FaTwitter,
   },
 };

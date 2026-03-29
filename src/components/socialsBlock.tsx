@@ -24,7 +24,7 @@ const SocialsBlock = ({
               return (
                 <Link
                   key={`social${index}`}
-                  to={social.link}
+                  to={social.link || "#"}
                   aria-label={`Link to ${social.service}`}
                 >
                   <div className="flex items-center gap-2 mb-1 text-gray-900 dark:text-white">
@@ -45,7 +45,7 @@ const SocialsBlock = ({
             return (
               <Link
                 key={`social${index}`}
-                to={social.link}
+                to={social.link || "#"}
                 aria-label={`Link to ${social.service}`}
               >
                 <div className="text-md text-gray-700 dark:text-gray-200 hover:text-black hover:dark:text-white">

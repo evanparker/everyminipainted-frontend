@@ -2,23 +2,31 @@ import { useState } from "react";
 import { FaCaretDown, FaMagnifyingGlass } from "react-icons/fa6";
 import { useNavigate } from "react-router-dom";
 
-function SearchBar({ className, placeholder }) {
-  const dropdownOptions = [
+function SearchBar({
+  className,
+  placeholder,
+}: {
+  className?: string;
+  placeholder?: string;
+}) {
+  const dropdownOptions: DropdownOption[] = [
     { name: "Minis", link: "/minis" },
     { name: "Figures", link: "/figures" },
     { name: "Manufacturers", link: "/manufacturers" },
   ];
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [currentOption, setCurrentOption] = useState(dropdownOptions[0]);
+  const [currentOption, setCurrentOption] = useState<DropdownOption>(
+    dropdownOptions[0],
+  );
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
 
-  const handleOptionSelection = (option) => {
+  const handleOptionSelection = (option: DropdownOption) => {
     setCurrentOption(option);
     setDropdownOpen(false);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setDropdownOpen(false);
     navigate(currentOption.link + `?search=${search}`);
@@ -87,3 +95,8 @@ function SearchBar({ className, placeholder }) {
   );
 }
 export default SearchBar;
+
+interface DropdownOption {
+  name: string;
+  link: string;
+}

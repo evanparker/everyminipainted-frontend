@@ -7,25 +7,57 @@ import {
   Label,
   TextInput,
 } from "flowbite-react";
+import type { Social } from "../types/social.types";
 
-const SocialsForm = ({ socials, setSocials }) => {
-  const addSocialField = (social) => {
+const SocialsForm = ({
+  socials,
+  setSocials,
+}: {
+  socials: Social[];
+  setSocials: React.Dispatch<React.SetStateAction<Social[]>>;
+}) => {
+  const addSocialField = (social: Social) => {
+    setSocials((prevSocials) =>
+      prevSocials
+        ? [
+            ...prevSocials,
+            {
+              name: social.name,
+              service: social.service,
+              link: "",
+              icon: social.icon,
+            },
+          ]
+        : [
+            {
+              name: social.name,
+              service: social.service,
+              link: "",
+              icon: social.icon,
+            },
+          ],
+    );
+  };
+
+  const deleteSocialField = (index: number) => {
     setSocials((prevSocials) => [
-      ...prevSocials,
-      { service: social.service, link: "" },
+      ...prevSocials.filter((_value, i) => index !== i),
     ]);
   };
 
-  const deleteSocialField = (index) => {
-    setSocials((prevSocials) => [
-      ...prevSocials.filter((value, i) => index !== i),
-    ]);
-  };
-
-  const handleSocialFieldChange = (e, social, index) => {
+  const handleSocialFieldChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    social: Social,
+    index: number,
+  ) => {
     setSocials((prevSocials) => {
       const socialsCopy = [...prevSocials];
-      socialsCopy[index] = { service: social.service, link: e.target.value };
+      socialsCopy[index] = {
+        name: social.name,
+        service: social.service,
+        link: e.target.value,
+        icon: social.icon,
+      };
       return socialsCopy;
     });
   };
@@ -40,14 +72,13 @@ const SocialsForm = ({ socials, setSocials }) => {
           className="mb-2 shadow-md"
           label="Add Social"
         >
-          {Object.keys(Socials).map((social) => (
-            <div key={Socials[social].service}>
+          {Object.entries(Socials).map(([key, social]) => (
+            <div key={`dropdown${key}`}>
               <DropdownItem
-                key={social.service}
-                onClick={() => addSocialField(Socials[social])}
-                icon={Socials[social].icon}
+                onClick={() => addSocialField(social)}
+                icon={social.icon}
               >
-                {Socials[social].name}
+                {social.name}
               </DropdownItem>
             </div>
           ))}
