@@ -2,7 +2,13 @@ import { Link } from "react-router-dom";
 import Socials from "../constants/socials";
 import { Social } from "../types/social.types";
 
-const SocialsBlock = ({ socials, compact }: { socials: Social[]; compact: boolean }) => {
+const SocialsBlock = ({
+  socials,
+  compact = false,
+}: {
+  socials: Social[];
+  compact?: boolean;
+}) => {
   return (
     <>
       {socials?.length > 0 && !compact && (
@@ -12,7 +18,9 @@ const SocialsBlock = ({ socials, compact }: { socials: Social[]; compact: boolea
               Socials:
             </div>
             {socials.map((social, index) => {
-              const Icon = Socials[social.service as keyof typeof Socials]?.icon || (() => <></>);
+              const Icon =
+                Socials[social.service as keyof typeof Socials]?.icon ||
+                (() => <></>);
               return (
                 <Link
                   key={`social${index}`}
@@ -31,7 +39,9 @@ const SocialsBlock = ({ socials, compact }: { socials: Social[]; compact: boolea
       {socials?.length > 0 && compact && (
         <div className="flex gap-2">
           {socials.map((social, index) => {
-            const Icon = Socials[social.service as keyof typeof Socials]?.icon || (() => <></>);
+            const Icon =
+              Socials[social.service as keyof typeof Socials]?.icon ||
+              (() => <></>);
             return (
               <Link
                 key={`social${index}`}

@@ -8,12 +8,12 @@ async function getManufacturers({ limit = 20, offset = 0 }: { limit?: number; of
   return response;
 }
 
-async function getManufacturer(id: string) {
+async function getManufacturer(id: string | undefined) {
   const response = await apiClient.get(`/manufacturers/${id}`);
   return response;
 }
 
-async function getManufacturerFigures(id: string, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getManufacturerFigures(id: string | undefined, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
   const response = await apiClient.get(
     `/manufacturers/${id}/figures?limit=${limit}&offset=${offset}`
   );
@@ -32,12 +32,12 @@ async function postManufacturer(manufacturer: Manufacturer) {
   return response;
 }
 
-async function putManufacturer(id: string, manufacturer: Manufacturer) {
+async function putManufacturer(id: string | undefined, manufacturer: Manufacturer) {
   const response = await apiClient.put(`/manufacturers/${id}`, manufacturer);
   return response;
 }
 
-async function deleteManufacturer(id: string) {
+async function deleteManufacturer(id: string | undefined) {
   const response = await apiClient.delete(`/manufacturers/${id}`);
   return response;
 }

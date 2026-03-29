@@ -1,12 +1,13 @@
 import {Image} from "./image.types";
+import { Social } from "./social.types";
 
 export type Manufacturer = {
-  _id: string;
+  _id?: string;
   name: string;
-  images: Image[] | string[];
-  thumbnail: Image | string;
+  images: Image[];
+  thumbnail?: Image;
   website?: string;
   description?: string;
-  createdAt: Date;
-  socials?: [{service: string, link: string}];
+  createdAt?: Date;
+  socials?: Social[];
 }

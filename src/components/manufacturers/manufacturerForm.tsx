@@ -1,5 +1,5 @@
 import { Button, Label, Textarea, TextInput } from "flowbite-react";
-import { useContext, useEffect, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify/unstyled";
 import {
@@ -15,21 +15,18 @@ import SaveToast from "../toasts/saveToast";
 import toBool from "../../util/toBool";
 import { putImage } from "../../services/image";
 import ImageTextFieldModal from "../images/imageTextFieldModal";
+import { Image } from "../../types/image.types";
+import { Manufacturer } from "../../types/manufacturer.types";
+import { Social } from "../../types/social.types";
 
-const ManufacturerForm = ({ mode }) => {
+const ManufacturerForm = ({ mode }: { mode: "new" | "edit" }) => {
   const { user } = useContext(UserContext);
-  const [manufacturer, setManufacturer] = useState({
-    name: "",
-    description: "",
-    website: "",
-    images: [],
-    socials: [],
-  });
+  const [manufacturer, setManufacturer] = useState<Manufacturer | undefined>();
   const [canEdit, setCanEdit] = useState(false);
-  const [socials, setSocials] = useState([]);
+  const [socials, setSocials] = useState<Social[]>([]);
   const [showTextFieldModal, setShowTextFieldModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [imageObj, setImageObj] = useState({});
+  const [imageObj, setImageObj] = useState<Image | undefined>();
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -48,6 +45,14 @@ const ManufacturerForm = ({ mode }) => {
     };
     if (mode === "edit") {
       fetchManufacturerData();
+    } else {
+      setManufacturer({
+        name: "",
+        description: "",
+        website: "",
+        images: [],
+        socials: [],
+      });
     }
   }, [mode, id]);
 
@@ -61,7 +66,8 @@ const ManufacturerForm = ({ mode }) => {
     }
   }, [user]);
 
-  const handleSort = (position1, position2) => {
+  const handleSort = (position1: number, position2: number) => {
+    if (!manufacturer) return;
     const imagesClone = [...manufacturer.images];
     const temp = imagesClone[position1];
     imagesClone[position1] = imagesClone[position2];
@@ -69,28 +75,34 @@ const ManufacturerForm = ({ mode }) => {
     setManufacturer({ ...manufacturer, images: imagesClone });
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = (index: number) => {
+    if (!manufacturer) return;
     const imagesClone = manufacturer.images;
     const removedImages = imagesClone.splice(index, 1);
     const newManufacturerObject = { ...manufacturer, images: imagesClone };
-    if (removedImages[0]?._id === manufacturer.thumbnail._id) {
+    if (removedImages[0]?._id === manufacturer.thumbnail?._id) {
       newManufacturerObject.thumbnail = imagesClone[0];
     }
     setManufacturer(newManufacturerObject);
   };
 
-  const handleSetThumbnail = (id) => {
-    setManufacturer((prevManufacturer) => ({
-      ...prevManufacturer,
-      thumbnail: id,
-    }));
+  const handleSetThumbnail = (newImage: Image) => {
+    setManufacturer((prevManufacturer) =>
+      prevManufacturer
+        ? {
+            ...prevManufacturer,
+            thumbnail: newImage,
+          }
+        : undefined,
+    );
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent) => {
+    if (!manufacturer) return;
     e.preventDefault();
     let manufacturerData;
     if (mode === "edit") {
-      manufacturerData = await putManufacturer(manufacturer._id, {
+      manufacturerData = await putManufacturer(manufacturer?._id, {
         ...manufacturer,
         socials,
       });
@@ -107,41 +119,61 @@ const ManufacturerForm = ({ mode }) => {
     }
   };
 
-  const addImages = async (newImages) => {
+  const addImages = async (newImages: Image[] = []) => {
+    if (!manufacturer) return;
     let images = manufacturer.images;
     images = [...images, ...newImages];
-    setManufacturer((prevManufacturer) => ({
-      ...prevManufacturer,
-      images,
-      thumbnail: prevManufacturer.thumbnail || images[0],
-    }));
+    setManufacturer((prevManufacturer) =>
+      prevManufacturer
+        ? {
+            ...prevManufacturer,
+            images,
+            thumbnail: prevManufacturer.thumbnail || images[0],
+          }
+        : undefined,
+    );
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setManufacturer((prevManufacturer) => ({
-      ...prevManufacturer,
-      name: e.target.value,
-    }));
+    setManufacturer((prevManufacturer) =>
+      prevManufacturer
+        ? {
+            ...prevManufacturer,
+            name: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
-    setManufacturer((prevManufacturer) => ({
-      ...prevManufacturer,
-      description: e.target.value,
-    }));
+    setManufacturer((prevManufacturer) =>
+      prevManufacturer
+        ? {
+            ...prevManufacturer,
+            description: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const handleWebsiteChange = (e) => {
+  const handleWebsiteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setManufacturer((prevManufacturer) => ({
-      ...prevManufacturer,
-      website: e.target.value,
-    }));
+    setManufacturer((prevManufacturer) =>
+      prevManufacturer
+        ? {
+            ...prevManufacturer,
+            website: e.target.value,
+          }
+        : undefined,
+    );
   };
 
   const handleImageSave = async () => {
+    if (!manufacturer || !imageObj) return;
     const imagesClone = [...manufacturer.images];
     imagesClone[selectedImageIndex] = imageObj;
     setManufacturer({ ...manufacturer, images: imagesClone });
@@ -157,7 +189,7 @@ const ManufacturerForm = ({ mode }) => {
     setShowTextFieldModal(false);
   };
 
-  const handleImageEdit = (index) => {
+  const handleImageEdit = (index: number) => {
     setSelectedImageIndex(index);
     setImageObj(manufacturer?.images[index]);
 
@@ -168,13 +200,15 @@ const ManufacturerForm = ({ mode }) => {
     <>
       {manufacturer && canEdit && (
         <div>
-          <ImageTextFieldModal
-            imageObj={imageObj}
-            show={showTextFieldModal}
-            onClose={() => setShowTextFieldModal(false)}
-            onConfirm={handleImageSave}
-            setImageObj={setImageObj}
-          />
+          {imageObj && (
+            <ImageTextFieldModal
+              imageObj={imageObj}
+              show={showTextFieldModal}
+              onClose={() => setShowTextFieldModal(false)}
+              onConfirm={handleImageSave}
+              setImageObj={setImageObj}
+            />
+          )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="block max-w-lg">

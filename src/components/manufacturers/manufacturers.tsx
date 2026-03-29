@@ -10,14 +10,16 @@ import {
 import UserContext from "../../userContext";
 import S3Image from "../images/s3Image";
 import toBool from "../../util/toBool";
+import { Manufacturer } from "../../types/manufacturer.types";
+import { ImageS3 } from "../../types/image.types";
 
 const Manufacturers = () => {
   const { user } = useContext(UserContext);
-  const [manufacturers, setManufacturers] = useState([]);
+  const [manufacturers, setManufacturers] = useState<Manufacturer[]>([]);
   const [canEdit, setCanEdit] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
   const searchString = searchParams.get("search");
@@ -44,7 +46,7 @@ const Manufacturers = () => {
   }, [searchString, currentPage]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
   useEffect(() => {
@@ -57,9 +59,11 @@ const Manufacturers = () => {
     }
   }, [user]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    const searchParams = { page };
+    const searchParams: { page?: string; search?: string } = {
+      page: page.toString(),
+    };
     if (searchString) {
       searchParams.search = searchString;
     }
@@ -87,7 +91,7 @@ const Manufacturers = () => {
                 className="overflow-hidden text-gray-900 dark:text-white"
                 renderImage={() =>
                   img?.type === "s3Image" ? (
-                    <S3Image image={img} width={400} height={400} />
+                    <S3Image image={img as ImageS3} width={400} height={400} />
                   ) : (
                     <div></div>
                   )

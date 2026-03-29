@@ -1,20 +1,25 @@
 import { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
 import ImageModal from "../images/innerImageZoomModal";
 import Markdown from "react-markdown";
 import { Link } from "react-router-dom";
 import SocialsBlock from "../socialsBlock";
 import S3Thumbnail from "../images/s3Thumbnail";
+import { Manufacturer } from "../../types/manufacturer.types";
+import { Image, ImageS3 } from "../../types/image.types";
 
-const DisplayManufacturer = ({ manufacturer }) => {
-  const [selectedImage, setSelectedImage] = useState();
+const DisplayManufacturer = ({
+  manufacturer,
+}: {
+  manufacturer: Manufacturer;
+}) => {
+  const [selectedImage, setSelectedImage] = useState<Image | undefined>();
 
   const onClose = () => {
     setSelectedImage(undefined);
   };
 
   const onArrowKeyDown = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (selectedImage) {
         const index = manufacturer.images.indexOf(selectedImage);
 
@@ -71,7 +76,11 @@ const DisplayManufacturer = ({ manufacturer }) => {
                 aria-describedby={`figcaption-${idx}`}
               >
                 {img.type === "s3Image" ? (
-                  <S3Thumbnail image={img} width={400} height={400} />
+                  <S3Thumbnail
+                    image={img as ImageS3}
+                    width={400}
+                    height={400}
+                  />
                 ) : (
                   <div></div>
                 )}
@@ -101,14 +110,10 @@ const DisplayManufacturer = ({ manufacturer }) => {
           </div>
         )}
 
-        <SocialsBlock socials={manufacturer?.socials} />
+        <SocialsBlock socials={manufacturer?.socials || []} />
       </div>
     </>
   );
-};
-
-DisplayManufacturer.propTypes = {
-  manufacturer: PropTypes.object,
 };
 
 export default DisplayManufacturer;
