@@ -12,24 +12,28 @@ import S3DragAndDrop from "../images/s3DragAndDrop";
 import SocialsForm from "../socialsForm";
 import SaveToast from "../toasts/saveToast";
 import UserAvatar from "./userAvatar";
+import { User } from "../../types/user.types";
+import { Social } from "../../types/social.types";
+import { ImageS3 } from "../../types/image.types";
 
 const UserEdit = () => {
   const { user: userFromContext, setUser: setUserFromContext } =
     useContext(UserContext);
-  const [user, setUser] = useState();
+  const [user, setUser] = useState<User | undefined>(undefined);
   const navigate = useNavigate();
-  const [socials, setSocials] = useState([]);
-  const [croppie, setCroppie] = useState(null);
+  const [socials, setSocials] = useState<Social[]>([]);
+  const [croppie, setCroppie] = useState<Croppie | null>(null);
   const [croppieImage, setCroppieImage] = useState("");
   const abortControllerRef = useRef(new AbortController());
 
   useEffect(() => {
     setUser(userFromContext);
-    setSocials(userFromContext?.socials);
+    setSocials(userFromContext?.socials || []);
   }, [userFromContext]);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!user) return;
     const responseData = await putUser(user._id, { ...user, socials });
     if (responseData) {
       setUserFromContext({ ...user, socials });
@@ -38,7 +42,7 @@ const UserEdit = () => {
     }
   };
 
-  const addImages = async (newImages) => {
+  const addImages = async (newImages: ImageS3[]) => {
     const newImage = newImages[0];
     const url = getS3Url({
       key: newImage.s3Key,
@@ -69,7 +73,7 @@ const UserEdit = () => {
     }
   };
 
-  const handleCropButton = (e) => {
+  const handleCropButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     if (croppie !== null) {
@@ -93,14 +97,16 @@ const UserEdit = () => {
           try {
             const image = await postImage(
               file,
-              abortControllerRef.current.signal
+              abortControllerRef.current.signal,
             );
 
-            setUser((prevUser) => ({ ...prevUser, avatar: image }));
+            setUser((prevUser) =>
+              prevUser ? { ...prevUser, avatar: image } : undefined,
+            );
             setCroppieImage("");
             croppie.destroy();
           } catch (error) {
-            if (error.name !== "AbortError") {
+            if ((error as Error).name !== "AbortError") {
               console.error(error);
             }
           }
@@ -108,20 +114,30 @@ const UserEdit = () => {
     }
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
-    setUser((prevUser) => ({
-      ...prevUser,
-      description: e.target.value,
-    }));
+    setUser((prevUser) =>
+      prevUser
+        ? {
+            ...prevUser,
+            description: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const handleWebsiteChange = (e) => {
+  const handleWebsiteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setUser((prevUser) => ({
-      ...prevUser,
-      website: e.target.value,
-    }));
+    setUser((prevUser) =>
+      prevUser
+        ? {
+            ...prevUser,
+            website: e.target.value,
+          }
+        : undefined,
+    );
   };
 
   return (

@@ -1,33 +1,48 @@
 import { Figure } from "../types/figure.types";
 import { apiClient } from "./apiClient";
 
-async function getFigures({ limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getFigures({
+  limit = 20,
+  offset = 0,
+}: {
+  limit?: number;
+  offset?: number;
+}) {
   const response = await apiClient.get(
-    `/figures/?limit=${limit}&offset=${offset}`
+    `/figures/?limit=${limit}&offset=${offset}`,
   );
   return response;
 }
 
 async function getFiguresBySearch(
   search: string,
-  { limit = 20, offset = 0, manufacturer = "" }: { limit?: number; offset?: number; manufacturer?: string }
+  {
+    limit = 20,
+    offset = 0,
+    manufacturer = "",
+  }: { limit?: number; offset?: number; manufacturer?: string },
 ) {
   const response = await apiClient.get(
     `/figures/search?search=${search}&limit=${limit}&offset=${offset}${
       manufacturer ? `&manufacturer=${manufacturer}` : ""
-    }`
+    }`,
   );
   return response;
 }
 
 async function getFigure(id: string | undefined) {
+  if (!id) return undefined;
   const response = await apiClient.get(`/figures/${id}`);
   return response;
 }
 
-async function getFigureMinis(id: string | undefined, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getFigureMinis(
+  id: string | undefined,
+  { limit = 20, offset = 0 }: { limit?: number; offset?: number },
+) {
+  if (!id) return undefined;
   const response = await apiClient.get(
-    `/figures/${id}/minis?limit=${limit}&offset=${offset}`
+    `/figures/${id}/minis?limit=${limit}&offset=${offset}`,
   );
   return response;
 }
@@ -38,6 +53,7 @@ async function postFigure(figure: Partial<Figure>) {
 }
 
 async function putFigure(id: string | undefined, figure: Partial<Figure>) {
+  if (!id) return undefined;
   const response = await apiClient.put(`/figures/${id}`, figure);
   return response;
 }

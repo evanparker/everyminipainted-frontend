@@ -8,15 +8,17 @@ import UserContext from "../../userContext";
 import DisplayMinis from "../minis/displayMinis";
 import SocialsBlock from "../socialsBlock";
 import UserAvatar from "./userAvatar";
+import { Mini } from "../../types/mini.types";
+import type { User } from "../../types/user.types";
 
 const User = () => {
   const { user: self } = useContext(UserContext);
-  const [minis, setMinis] = useState();
-  const [user, setUser] = useState();
+  const [minis, setMinis] = useState<Mini[]>([]);
+  const [user, setUser] = useState<User | undefined>(undefined);
   const { username } = useParams();
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
 
@@ -42,17 +44,17 @@ const User = () => {
   }, [currentPage, username]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    setSearchParams({ page }, { replace: false });
+    setSearchParams({ page: page.toString() }, { replace: false });
   };
 
   return (
     <>
-      {minis && (
+      {user && (
         <div className="flex flex-col gap-5">
           <div className="w-xs">
             <UserAvatar user={user} isLink={false} />
@@ -77,7 +79,7 @@ const User = () => {
             </div>
           )}
 
-          <SocialsBlock socials={user?.socials} />
+          {user?.socials && <SocialsBlock socials={user.socials} />}
 
           {self?._id === user?._id && (
             <div className="flex gap-5">

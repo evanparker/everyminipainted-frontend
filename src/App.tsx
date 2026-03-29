@@ -41,10 +41,11 @@ import UserContext from "./userContext";
 import useUserData from "./useUserData";
 import NotFound from "./404";
 import GenerateInvite from "./components/admin/generateInvite";
+import type { User as UserType } from "./types/user.types";
 
 function App() {
   const { token, setUserData, resetUserData } = useUserData();
-  const [user, setUser] = useState(undefined);
+  const [user, setUser] = useState<UserType | undefined>(undefined);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -54,17 +55,17 @@ function App() {
     if (token) {
       fetchUserData();
     } else {
-      setUser(null);
+      setUser(undefined);
     }
   }, [token]);
 
-  const login = (userData) => {
+  const login = (userData: { token: string; userId: string }) => {
     setUserData(userData);
   };
 
   const logout = async () => {
     try {
-      await postLogout({});
+      await postLogout();
       resetUserData();
       toast(LogoutToast);
     } catch (error) {
@@ -95,7 +96,7 @@ function App() {
         </div>
 
         <Routes>
-          <Route exact path="/" element={<Minis />} />
+          <Route path="/" element={<Minis />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/contact" element={<ContactPage />} />
 

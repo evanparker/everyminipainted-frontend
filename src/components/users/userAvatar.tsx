@@ -3,12 +3,19 @@ import SocialsBlock from "../socialsBlock";
 import { Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa6";
 import S3Image from "../images/s3Image";
+import { User } from "../../types/user.types";
+import { ImageS3 } from "../../types/image.types";
 
 const UserAvatar = ({
   user,
   showText = true,
   isLink = true,
   showSocials = true,
+}: {
+  user: User;
+  showText?: boolean;
+  isLink?: boolean;
+  showSocials?: boolean;
 }) => {
   return (
     <>
@@ -41,9 +48,9 @@ const UserAvatar = ({
                 </Link>
               )}
               {!isLink && <div>{user.username}</div>}
-              {showSocials && user.socials?.length > 0 && (
+              {showSocials && user.socials && user.socials?.length > 0 && (
                 <div className="text-sm text-gray-500 dark:text-gray-400">
-                  <SocialsBlock socials={user.socials} compact={true} />
+                  <SocialsBlock socials={user.socials || []} compact={true} />
                 </div>
               )}
             </div>
@@ -54,13 +61,24 @@ const UserAvatar = ({
   );
 };
 
-const ProfilePicture = ({ user, props }) => {
+const ProfilePicture = ({
+  user,
+  props,
+}: {
+  user: User;
+  props: Partial<React.ComponentProps<typeof S3Image>>;
+}) => {
   return (
     <>
       {(user.avatar && (
         <div className="w-10 h-10 overflow-hidden rounded-full">
           {user?.avatar.type === "s3Image" ? (
-            <S3Image image={user?.avatar} width={120} height={120} {...props} />
+            <S3Image
+              {...props}
+              image={user?.avatar as ImageS3}
+              width={120}
+              height={120}
+            />
           ) : (
             <div></div>
           )}

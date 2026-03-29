@@ -1,9 +1,15 @@
 import { Collection } from "../types/collection.types";
 import { apiClient } from "./apiClient";
 
-async function getCollections({ limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getCollections({
+  limit = 20,
+  offset = 0,
+}: {
+  limit?: number;
+  offset?: number;
+}) {
   const response = await apiClient.get(
-    `/collections/?limit=${limit}&offset=${offset}`
+    `/collections/?limit=${limit}&offset=${offset}`,
   );
   return response;
 }
@@ -12,21 +18,33 @@ async function getCollectionsByFigure({
   figureId = "",
   limit = 20,
   offset = 0,
-}: { figureId?: string; limit?: number; offset?: number }) {
+}: {
+  figureId?: string;
+  limit?: number;
+  offset?: number;
+}) {
   const response = await apiClient.get(
-    `/collections/figure/${figureId}?limit=${limit}&offset=${offset}`
+    `/collections/figure/${figureId}?limit=${limit}&offset=${offset}`,
   );
   return response;
 }
 
-async function getCollectionsBySearch(search: string, { limit = 20, offset = 0, manufacturer }: { limit?: number; offset?: number; manufacturer?: string }) {
+async function getCollectionsBySearch(
+  search: string,
+  {
+    limit = 20,
+    offset = 0,
+    manufacturer,
+  }: { limit?: number; offset?: number; manufacturer?: string },
+) {
   const response = await apiClient.get(
-    `/collections/search?search=${search}&limit=${limit}&offset=${offset}&manufacturer=${manufacturer}`
+    `/collections/search?search=${search}&limit=${limit}&offset=${offset}&manufacturer=${manufacturer}`,
   );
   return response;
 }
 
 async function getCollection(id: string | undefined) {
+  if (!id) return undefined;
   const response = await apiClient.get(`/collections/${id}`);
   return response;
 }
@@ -37,11 +55,13 @@ async function postCollection(collection: Collection) {
 }
 
 async function putCollection(id: string | undefined, collection: Collection) {
+  if (!id) return undefined;
   const response = await apiClient.put(`/collections/${id}`, collection);
   return response;
 }
 
 async function deleteCollection(id: string | undefined) {
+  if (!id) return undefined;
   const response = await apiClient.delete(`/collections/${id}`);
   return response;
 }
