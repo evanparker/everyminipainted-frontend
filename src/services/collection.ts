@@ -19,14 +19,14 @@ async function getCollectionsByFigure({
   return response;
 }
 
-async function getCollectionsBySearch(search: string, { limit = 20, offset = 0 }: { limit?: number; offset?: number }) {
+async function getCollectionsBySearch(search: string, { limit = 20, offset = 0, manufacturer }: { limit?: number; offset?: number; manufacturer?: string }) {
   const response = await apiClient.get(
-    `/collections/search?search=${search}&limit=${limit}&offset=${offset}`
+    `/collections/search?search=${search}&limit=${limit}&offset=${offset}&manufacturer=${manufacturer}`
   );
   return response;
 }
 
-async function getCollection(id: string) {
+async function getCollection(id: string | undefined) {
   const response = await apiClient.get(`/collections/${id}`);
   return response;
 }
@@ -36,12 +36,12 @@ async function postCollection(collection: Collection) {
   return response;
 }
 
-async function putCollection(id: string, collection: Collection) {
+async function putCollection(id: string | undefined, collection: Collection) {
   const response = await apiClient.put(`/collections/${id}`, collection);
   return response;
 }
 
-async function deleteCollection(id: string) {
+async function deleteCollection(id: string | undefined) {
   const response = await apiClient.delete(`/collections/${id}`);
   return response;
 }

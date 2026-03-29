@@ -18,21 +18,20 @@ import { getFiguresBySearch } from "../../services/figure";
 import { FaTrashCan } from "react-icons/fa6";
 import ImageTextFieldModal from "../images/imageTextFieldModal";
 import { putImage } from "../../services/image";
+import { Manufacturer } from "../../types/manufacturer.types";
+import Collection from "./collection";
+import { Image } from "../../types/image.types";
+import Figure from "../figures/figure";
 
-const CollectionForm = ({ mode }) => {
+const CollectionForm = ({ mode }: { mode: "new" | "edit" }) => {
   const { user } = useContext(UserContext);
-  const [collection, setCollection] = useState({
-    name: "",
-    partNumber: "",
-    website: "",
-    description: "",
-    images: [],
-    figures: [],
-  });
+  const [collection, setCollection] = useState<Collection | undefined>();
   const [canEdit, setCanEdit] = useState(false);
   const [manufacturerSearch, setManufacturerSearch] = useState("");
   const [manufacturerResults, setManufacturerResults] = useState([]);
-  const [selectedManufacturer, setSelectedManufacturer] = useState();
+  const [selectedManufacturer, setSelectedManufacturer] = useState<
+    Manufacturer | undefined
+  >();
   const [manufacturerDropdownOpen, setManufacturerDropdownOpen] =
     useState(false);
 
@@ -42,7 +41,7 @@ const CollectionForm = ({ mode }) => {
 
   const [showTextFieldModal, setShowTextFieldModal] = useState(false);
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-  const [imageObj, setImageObj] = useState({});
+  const [imageObj, setImageObj] = useState<Image | undefined>();
 
   const { id } = useParams();
   const navigate = useNavigate();
@@ -64,6 +63,15 @@ const CollectionForm = ({ mode }) => {
 
     if (mode === "edit") {
       fetchCollectionData();
+    } else {
+      setCollection({
+        name: "",
+        partNumber: "",
+        website: "",
+        description: "",
+        images: [],
+        figures: [],
+      });
     }
   }, [mode, id]);
 
@@ -78,33 +86,40 @@ const CollectionForm = ({ mode }) => {
     }
   }, [user]);
 
-  const handleSort = (position1, position2) => {
-    const imagesClone = [...collection.images];
+  const handleSort = (position1: number, position2: number) => {
+    if (!collection) return;
+    const imagesClone = [...(collection.images || [])];
     const temp = imagesClone[position1];
     imagesClone[position1] = imagesClone[position2];
     imagesClone[position2] = temp;
     setCollection({ ...collection, images: imagesClone });
   };
 
-  const handleDelete = (index) => {
-    const imagesClone = collection.images;
+  const handleDelete = (index: number) => {
+    if (!collection) return;
+    const imagesClone = collection.images || [];
     const removedImages = imagesClone.splice(index, 1);
     const newCollectionObject = { ...collection, images: imagesClone };
-    if (removedImages[0]?._id === collection.thumbnail._id) {
+    if (removedImages[0]?._id === collection?.thumbnail?._id) {
       newCollectionObject.thumbnail = imagesClone[0];
     }
     setCollection(newCollectionObject);
   };
 
-  const handleSetThumbnail = (id) => {
-    setCollection((prevCollection) => ({ ...prevCollection, thumbnail: id }));
+  const handleSetThumbnail = (newThumbnail: Image) => {
+    setCollection((prevCollection) =>
+      prevCollection
+        ? { ...prevCollection, thumbnail: newThumbnail }
+        : undefined,
+    );
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!collection) return;
     let collectionData;
     e.preventDefault();
     if (mode === "edit") {
-      collectionData = await putCollection(collection._id, {
+      collectionData = await putCollection(collection?._id, {
         ...collection,
         manufacturer: selectedManufacturer,
       });
@@ -124,55 +139,80 @@ const CollectionForm = ({ mode }) => {
     }
   };
 
-  const addImages = async (newImages) => {
-    let images = collection.images;
+  const addImages = async (newImages: Image[]) => {
+    if (!collection) return;
+    let images = collection?.images;
     images = [...images, ...newImages];
-    setCollection((prevCollection) => ({
-      ...prevCollection,
-      images,
-      thumbnail: prevCollection.thumbnail || images[0],
-    }));
+    setCollection((prevCollection) =>
+      prevCollection
+        ? {
+            ...prevCollection,
+            images,
+            thumbnail: prevCollection.thumbnail || images[0],
+          }
+        : undefined,
+    );
   };
 
-  const handleNameChange = (e) => {
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setCollection((prevCollection) => ({
-      ...prevCollection,
-      name: e.target.value,
-    }));
+    setCollection((prevCollection) =>
+      prevCollection
+        ? {
+            ...prevCollection,
+            name: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const handleDescriptionChange = (e) => {
+  const handleDescriptionChange = (
+    e: React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
     e.preventDefault();
-    setCollection((prevCollection) => ({
-      ...prevCollection,
-      description: e.target.value,
-    }));
+    setCollection((prevCollection) =>
+      prevCollection
+        ? {
+            ...prevCollection,
+            description: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const handleWebsiteChange = (e) => {
+  const handleWebsiteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setCollection((prevCollection) => ({
-      ...prevCollection,
-      website: e.target.value,
-    }));
+    setCollection((prevCollection) =>
+      prevCollection
+        ? {
+            ...prevCollection,
+            website: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const handlePartNumberChange = (e) => {
+  const handlePartNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setCollection((prevCollection) => ({
-      ...prevCollection,
-      partNumber: e.target.value,
-    }));
+    setCollection((prevCollection) =>
+      prevCollection
+        ? {
+            ...prevCollection,
+            partNumber: e.target.value,
+          }
+        : undefined,
+    );
   };
 
-  const chooseManufacturer = (manufacturer) => {
+  const chooseManufacturer = (manufacturer: Manufacturer | undefined) => {
     setSelectedManufacturer(manufacturer);
     setManufacturerSearch(manufacturer?.name || "");
     setManufacturerDropdownOpen(false);
   };
 
-  const handleManufacturerSearchChange = async (e) => {
+  const handleManufacturerSearchChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setManufacturerSearch(e.target.value);
     const manufacturers = await getManufacturersBySearch(e.target.value, {
@@ -183,23 +223,32 @@ const CollectionForm = ({ mode }) => {
     setManufacturerResults(manufacturers.docs);
   };
 
-  const handleManufacturerSearchBlur = (e) => {
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  const handleManufacturerSearchBlur = (
+    e: React.FocusEvent | React.KeyboardEvent,
+  ) => {
+    if (
+      !("relatedTarget" in e) ||
+      !e.relatedTarget ||
+      !e.currentTarget.contains(e.relatedTarget)
+    ) {
       setManufacturerDropdownOpen(false);
     }
   };
 
-  const chooseFigure = (figure) => {
+  const chooseFigure = (figure: Figure | undefined) => {
+    if (!collection || !figure) return;
     const figures = collection.figures || [];
     figures.push(figure);
     setCollection({ ...collection, figures });
     setFigureDropdownOpen(false);
   };
 
-  const handleFigureSearchChange = async (e) => {
+  const handleFigureSearchChange = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     e.preventDefault();
     setFigureSearch(e.target.value);
-    const options = {
+    const options: { limit: number; offset: number; manufacturer?: string } = {
       limit: 20,
       offset: 0,
     };
@@ -212,19 +261,27 @@ const CollectionForm = ({ mode }) => {
     setFigureResults(figures);
   };
 
-  const handleFigureSearchBlur = (e) => {
-    if (!e.relatedTarget || !e.currentTarget.contains(e.relatedTarget)) {
+  const handleFigureSearchBlur = (
+    e: React.FocusEvent | React.KeyboardEvent,
+  ) => {
+    if (
+      !("relatedTarget" in e) ||
+      !e.relatedTarget ||
+      !e.currentTarget.contains(e.relatedTarget)
+    ) {
       setFigureDropdownOpen(false);
     }
   };
 
-  const handleFigureDelete = (index) => {
+  const handleFigureDelete = (index: number) => {
+    if (!collection) return;
     const figures = collection.figures || [];
     figures.splice(index, 1);
     setCollection({ ...collection, figures });
   };
 
   const handleImageSave = async () => {
+    if (!collection || !imageObj) return;
     const imagesClone = [...collection.images];
     imagesClone[selectedImageIndex] = imageObj;
     setCollection({ ...collection, images: imagesClone });
@@ -240,7 +297,7 @@ const CollectionForm = ({ mode }) => {
     setShowTextFieldModal(false);
   };
 
-  const handleImageEdit = (index) => {
+  const handleImageEdit = (index: number) => {
     setSelectedImageIndex(index);
     setImageObj(collection?.images[index]);
 
@@ -251,13 +308,15 @@ const CollectionForm = ({ mode }) => {
     <>
       {collection && canEdit && (
         <div>
-          <ImageTextFieldModal
-            imageObj={imageObj}
-            show={showTextFieldModal}
-            onClose={() => setShowTextFieldModal(false)}
-            onConfirm={handleImageSave}
-            setImageObj={setImageObj}
-          />
+          {imageObj && (
+            <ImageTextFieldModal
+              imageObj={imageObj}
+              show={showTextFieldModal}
+              onClose={() => setShowTextFieldModal(false)}
+              onConfirm={handleImageSave}
+              setImageObj={setImageObj}
+            />
+          )}
 
           <form onSubmit={handleSubmit} className="flex flex-col gap-5">
             <div className="max-w-lg block">

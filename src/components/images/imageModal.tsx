@@ -70,7 +70,11 @@ function ImageModal({
             }}
           >
             {image?.type === "s3Image" ? (
-              <S3Image image={image} width={1600} onLoad={onImageLoad} />
+              <S3Image
+                image={image as ImageS3}
+                width={1600}
+                onLoad={onImageLoad}
+              />
             ) : (
               <></>
             )}

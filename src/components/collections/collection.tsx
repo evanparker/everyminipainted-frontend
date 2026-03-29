@@ -10,11 +10,12 @@ import DeleteToast from "../toasts/deleteToast";
 import DisplayCollection from "./displayCollection";
 import DisplayFigures from "../figures/displayFigures";
 import toBool from "../../util/toBool";
+import type { Collection } from "../../types/collection.types";
 
 const Collection = () => {
   const { user } = useContext(UserContext);
   const navigate = useNavigate();
-  const [collection, setCollection] = useState();
+  const [collection, setCollection] = useState<Collection | undefined>();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [canEdit, setCanEdit] = useState(false);
   const { id } = useParams();
@@ -35,7 +36,7 @@ const Collection = () => {
         const collectionData = await getCollection(id);
         setCollection(collectionData);
       } catch (e) {
-        if (e.status === 404) {
+        if ((e as { status: number }).status === 404) {
           navigate("/404", { replace: true });
         }
       }
@@ -48,7 +49,7 @@ const Collection = () => {
     const deletedCollection = await deleteCollection(id);
     if (deletedCollection) {
       toast(DeleteToast, {
-        data: { message: `${collection.name} Deleted` },
+        data: { message: `${collection?.name} Deleted` },
       });
 
       navigate("/collections");
@@ -82,7 +83,7 @@ const Collection = () => {
           </Button>
         </div>
       )}
-      {collection?.figures?.length > 0 && (
+      {collection && collection?.figures?.length > 0 && (
         <>
           <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">
             Contains These Figures
@@ -92,7 +93,7 @@ const Collection = () => {
           </div>
         </>
       )}
-      {!(collection?.figures?.length > 0) && (
+      {collection && !(collection?.figures?.length > 0) && (
         <>
           <h3 className="mt-5 text-3xl font-extrabold leading-none tracking-tight text-gray-900 dark:text-white">
             Contains No Figures

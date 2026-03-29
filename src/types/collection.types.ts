@@ -3,14 +3,14 @@ import { Image } from "./image.types";
 import { Manufacturer } from "./manufacturer.types";
 
 export type Collection = { 
-  _id: string;
+  _id?: string;
   name: string;
-  manufacturer: Manufacturer | string;
-  figures: Figure[] | string[];
-  images: Image[] | string[];
-  thumbnail: Image | string;
+  manufacturer?: Manufacturer;
+  figures: Figure[];
+  images: Image[];
+  thumbnail?: Image;
   description?: string;
   website?: string;
   partNumber?: string;
-  createdAt: Date;
+  createdAt?: Date;
 }

@@ -10,15 +10,16 @@ import {
 import UserContext from "../../userContext";
 import DisplayCollections from "./displayCollections";
 import toBool from "../../util/toBool";
+import Collection from "./collection";
 // import CollectionSearchForm from "./collectionSearchForm";
 
 const Collections = () => {
   const { user } = useContext(UserContext);
-  const [collections, setCollections] = useState([]);
+  const [collections, setCollections] = useState<Collection[]>([]);
   const [canEdit, setCanEdit] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState(
-    parseInt(searchParams.get("page") || 1)
+    parseInt(searchParams.get("page") || "1"),
   );
   const [totalPages, setTotalPages] = useState(0);
   const searchString = searchParams.get("search") || "";
@@ -31,7 +32,7 @@ const Collections = () => {
         results = await getCollectionsBySearch(searchString, {
           limit: itemsPerPage,
           offset: (currentPage - 1) * itemsPerPage,
-          manufacturer,
+          manufacturer: manufacturer || undefined,
         });
         setTotalPages(results.totalPages);
         setCollections(results.docs);
@@ -49,7 +50,7 @@ const Collections = () => {
   }, [searchString, currentPage, manufacturer]);
 
   useEffect(() => {
-    setCurrentPage(parseInt(searchParams.get("page") || 1));
+    setCurrentPage(parseInt(searchParams.get("page") || "1"));
   }, [searchParams]);
 
   useEffect(() => {
@@ -63,9 +64,13 @@ const Collections = () => {
     }
   }, [user]);
 
-  const onPageChange = (page) => {
+  const onPageChange = (page: number) => {
     setCurrentPage(page);
-    const searchParams = { page };
+    const searchParams: {
+      page?: string;
+      search?: string;
+      manufacturer?: string;
+    } = { page: page.toString() };
     if (searchString) {
       searchParams.search = searchString;
     }

@@ -1,19 +1,20 @@
 import { useState, useEffect, useCallback } from "react";
-import PropTypes from "prop-types";
 import ImageModal from "../images/innerImageZoomModal";
 import { Link } from "react-router-dom";
 import Markdown from "react-markdown";
 import S3Thumbnail from "../images/s3Thumbnail";
+import { Collection } from "../../types/collection.types";
+import { Image, ImageS3 } from "../../types/image.types";
 
-const DisplayCollection = ({ collection }) => {
-  const [selectedImage, setSelectedImage] = useState();
+const DisplayCollection = ({ collection }: { collection: Collection }) => {
+  const [selectedImage, setSelectedImage] = useState<Image | undefined>();
 
   const onClose = () => {
     setSelectedImage(undefined);
   };
 
   const onArrowKeyDown = useCallback(
-    (e) => {
+    (e: KeyboardEvent) => {
       if (selectedImage) {
         const index = collection.images.indexOf(selectedImage);
 
@@ -70,7 +71,11 @@ const DisplayCollection = ({ collection }) => {
                 aria-describedby={`figcaption-${idx}`}
               >
                 {img.type === "s3Image" ? (
-                  <S3Thumbnail image={img} width={400} height={400} />
+                  <S3Thumbnail
+                    image={img as ImageS3}
+                    width={400}
+                    height={400}
+                  />
                 ) : (
                   <div></div>
                 )}
@@ -124,10 +129,6 @@ const DisplayCollection = ({ collection }) => {
       </div>
     </>
   );
-};
-
-DisplayCollection.propTypes = {
-  collection: PropTypes.object,
 };
 
 export default DisplayCollection;

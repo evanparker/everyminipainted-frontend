@@ -7,7 +7,7 @@ export type User = {
   email: string;
   password?: string;
   roles: string[];
-  avatar?: Image | string;
+  avatar?: Image;
   website?: string;
   description?: string;
   socials?: {
