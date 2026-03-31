@@ -3,12 +3,12 @@ import { useState } from "react";
 const useUserData = () => {
   const getToken = () => {
     const tokenString = localStorage.getItem("token");
-    const userToken = JSON.parse(tokenString || "");
+    const userToken = tokenString ? JSON.parse(tokenString) : undefined;
     return userToken;
   };
   const getUserId = () => {
     const userIdString = localStorage.getItem("userId");
-    const userId = JSON.parse(userIdString || "");
+    const userId = userIdString ? JSON.parse(userIdString) : undefined;
     return userId;
   };
 
