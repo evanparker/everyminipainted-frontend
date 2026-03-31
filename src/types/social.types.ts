@@ -1,10 +1,10 @@
-import { ComponentProps, FC } from "react";
+import { IconType } from "react-icons";
 
 export type Social = {
   name: string;
   link?: string;
   service: SocialService;
-  icon: FC<ComponentProps<"svg">>;
+  icon: IconType;
 };
 
 export enum SocialService {
